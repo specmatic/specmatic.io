@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
+<loc>https://specmatic.io/</loc>
+<lastmod>2025-07-14T10:51:40+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/genie/</loc>
+<lastmod>2025-07-14T10:14:29+05:30</lastmod></url>
+<url>
 <loc>https://specmatic.io/specmatic-studio/</loc>
 <lastmod>2025-07-10T15:57:38+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/women-in-apis-2025-breaking-silence/</loc>
 <lastmod>2025-07-10T14:06:52+05:30</lastmod></url>
-<url>
-<loc>https://specmatic.io/</loc>
-<lastmod>2025-07-10T14:05:09+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/apidays-india-2025/</loc>
 <lastmod>2025-07-10T08:19:54+05:30</lastmod></url>
