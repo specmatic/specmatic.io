@@ -13,6 +13,7 @@ Documentation for [Specmatic](https://specmatic.io)
   # clean up the entire contents, unpack the new website, and setup redirects
   rake all # for mac/linux
   doit.ps1 # windows powershell, if you have it installed
+  docker compose up --build # to preview the website. Open http://localhost:4000 in your browser
   git add .
   git commit -m 'Your commit message'
   git push
