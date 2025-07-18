@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"><url>
+<loc>https://specmatic.io/article/</loc>
+</url>
+<url>
+<loc>https://specmatic.io/article/demystifying-api-lifecycle-unpacking-essential-roles-responsibilities-and-their-challenges/</loc>
+<lastmod>2025-05-20T09:22:34+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/article/contract-driven-development-a-real-world-adoption-journey/</loc>
+<lastmod>2024-10-23T11:45:17+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/article/microservices-integration-done-right-using-contract-driven-development/</loc>
+<lastmod>2023-05-25T16:07:15+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/article/contract-driven-development-post-2-integration-hell/</loc>
+<lastmod>2023-05-25T05:06:51+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/article/contract-driven-development-post-1-the-trouble-with-api-mocks-and-stubs/</loc>
+<lastmod>2023-05-24T11:32:04+05:30</lastmod></url></urlset>
