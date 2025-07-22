@@ -1,0 +1,23 @@
+
+<wpml-config>
+	<gutenberg-blocks>
+		<gutenberg-block type="uagb/login" translate="1">
+			<key name="usernameLabel" />
+			<key name="usernamePlaceholder" />
+			<key name="passwordLabel" />
+			<key name="passwordPlaceholder" />
+			<key name="rememberMeLabel" />
+			<key name="forgotPasswordLabel" />
+			<key name="registerInfo" />
+			<key name="registerButtonLabel" />
+			<key name="facebookLoginButtonText" />
+			<key name="googleLoginButtonText" />
+			<key name="loginButtonLabel" />
+		</gutenberg-block>
+		<gutenberg-block type="uagb/instagram-feed" translate="1">
+			<key name="paginateButtonText" />
+			<key name="postDefaultCaption" />
+			<xpath>//div[@class="spectra-ig-feed__media-thumbnail-caption"]</xpath>
+		</gutenberg-block>
+	</gutenberg-blocks>
+</wpml-config>

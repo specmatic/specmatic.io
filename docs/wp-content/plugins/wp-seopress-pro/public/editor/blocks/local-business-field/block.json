@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpseopress/local-business-field",
+  "title": "Local Business",
+  "description": "Displays a single Local Business field",
+  "icon": "store",
+  "category": "wpseopress",
+  "textdomain": "wp-seopress-pro",
+  "parent": [
+    "wpseopress/local-business"
+  ],
+  "supports": {
+    "align": true,
+    "html": false,
+    "color": {
+      "gradients": true,
+      "link": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
+  },
+  "attributes": {
+    "field": {
+      "type": "string",
+      "default": ""
+    },
+    "hideClosedDays": {
+      "type": "boolean",
+      "default": false
+    },
+    "inline": {
+      "type": "boolean",
+      "default": false
+    },
+    "external": {
+      "type": "boolean",
+      "default": false
+    },
+    "textColor": {
+      "type": "string"
+    },
+    "backgroundColor": {
+      "type": "string"
+    },
+    "style": {
+      "type": "object"
+    },
+    "className": {
+      "type": "string"
+    },
+    "fontSize": {
+      "type": "string"
+    },
+    "gradient": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="0">ssp-form</custom-type>
+    </custom-types>
+    <taxonomies>
+        <taxonomy translate="0">ssp-build</taxonomy>
+    </taxonomies>
+    <custom-fields>
+        <custom-field action="ignore">tool</custom-field>
+        <custom-field action="ignore">email</custom-field>
+        <custom-field action="ignore">additional_headers</custom-field>
+        <custom-field action="ignore">form_id</custom-field>
+        <custom-field action="ignore">subject</custom-field>
+        <custom-field action="ignore">endpoint</custom-field>
+        <custom-field action="ignore">redirect_url</custom-field>
+        <custom-field action="ignore">name_attributes</custom-field>
+        <custom-field action="ignore">message</custom-field>
+    </custom-fields>
+    <admin-texts>
+        <key name="simply-static">
+            <key name="destination_scheme"/>
+            <key name="destination_host"/>
+            <key name="delivery_method"/>
+            <key name="local_dir"/>
+            <key name="relative_path"/>
+            <key name="destination_url_type"/>
+            <key name="debugging_mode"/>
+            <key name="origin_url"/>
+            <key name="force_replace_url"/>
+            <key name="clear_directory_before_export"/>
+            <key name="ssh_use_forms"/>
+            <key name="iframe_urls"/>
+            <key name="ssh_404_page_id"/>
+            <key name="ssh_thank_you_page_id"/>
+            <key name="tiiny_subdomain"/>
+            <key name="tiiny_domain_suffix"/>
+            <key name="tiiny_password"/>
+            <key name="cdn_api_key"/>
+            <key name="cdn_storage_host"/>
+            <key name="cdn_access_key"/>
+            <key name="cdn_pull_zone"/>
+            <key name="cdn_storage_zone"/>
+            <key name="cdn_directory"/>
+            <key name="github_account_type"/>
+            <key name="github_user"/>
+            <key name="github_email"/>
+            <key name="github_personal_access_token"/>
+            <key name="github_repository"/>
+            <key name="github_repository_visibility"/>
+            <key name="github_branch"/>
+            <key name="github_webhook_url"/>
+            <key name="github_folder_path"/>
+            <key name="aws_region"/>
+            <key name="aws_auth_method"/>
+            <key name="aws_access_key"/>
+            <key name="aws_access_secret"/>
+            <key name="aws_bucket"/>
+            <key name="aws_subdirectory"/>
+            <key name="aws_distribution_id"/>
+            <key name="aws_empty"/>
+            <key name="fix_cors"/>
+            <key name="static_url"/>
+            <key name="use_forms"/>
+            <key name="use_comments"/>
+            <key name="comment_redirect"/>
+            <key name="use_search"/>
+            <key name="search_type"/>
+            <key name="search_index_title"/>
+            <key name="search_index_content"/>
+            <key name="search_index_excerpt"/>
+            <key name="search_excludable"/>
+            <key name="search_metadata"/>
+            <key name="fuse_selector"/>
+            <key name="algolia_app_id"/>
+            <key name="algolia_admin_api_key"/>
+            <key name="algolia_search_api_key"/>
+            <key name="algolia_index"/>
+            <key name="algolia_selector"/>
+            <key name="use_minify"/>
+            <key name="minify_html"/>
+            <key name="minify_css"/>
+            <key name="minify_inline_css"/>
+            <key name="minify_js"/>
+            <key name="minify_inline_js"/>
+            <key name="generate_404"/>
+            <key name="wp_content_directory"/>
+            <key name="wp_includes_directory"/>
+            <key name="wp_uploads_directory"/>
+            <key name="wp_plugins_directory"/>
+            <key name="wp_themes_directory"/>
+            <key name="theme_style_name"/>
+            <key name="author_url"/>
+            <key name="hide_comments"/>
+            <key name="hide_version"/>
+            <key name="hide_generator"/>
+            <key name="hide_prefetch"/>
+            <key name="hide_rsd"/>
+            <key name="hide_emotes"/>
+            <key name="disable_xmlrpc"/>
+            <key name="disable_embed"/>
+            <key name="disable_db_debug"/>
+            <key name="disable_wlw_manifest"/>
+            <key name="sftp_host"/>
+            <key name="sftp_user"/>
+            <key name="sftp_pass"/>
+            <key name="sftp_folder"/>
+            <key name="sftp_port"/>
+        </key>
+    </admin-texts>
+    <shortcodes>
+        <shortcode>
+            <tag>ssp-search</tag>
+        </shortcode>
+    </shortcodes>
+</wpml-config>

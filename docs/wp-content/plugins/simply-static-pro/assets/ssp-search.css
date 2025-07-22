@@ -1,0 +1,99 @@
+
+.ssp-search .form-row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.ssp-search .search-input-container {
+    flex: 1;
+}
+
+.ssp-search .search-input {
+    width: 100%;
+    padding: 8px;
+}
+
+.ssp-search .search-submit {
+    padding: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--wp--preset--color--main);
+    border: none;
+    cursor: pointer;
+}
+
+.ssp-search .search-submit svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--wp--preset--color--base);
+}
+
+.ssp-search > .search-form .search-submit {
+    margin: 0;
+}
+
+.ssp-search .search-auto-complete {
+    background: var(--wp--preset--color--base);
+    position: absolute;
+    padding: 4px 0;
+    width: 100%;
+    z-index: 1;
+    top: 45px;
+    max-width: 100%;
+}
+
+.ssp-search .search-auto-complete.show {
+    display: block;
+}
+
+.ssp-search .search-auto-complete ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: none;
+}
+
+.ssp-search .auto-complete-item {
+    padding: 5px 0 5px 10px;
+    margin: 0;
+    font-size: var(--wp--preset--font-size--small);
+}
+
+.ssp-search .auto-complete-item:hover {
+    cursor: pointer;
+    background: var(--wp--preset--color--tertiary);
+}
+
+.ssp-search .auto-complete-item p {
+    margin: 0;
+}
+
+.ssp-search .search-input-container {
+    flex: 1;
+    box-sizing: border-box;
+    display: flex;
+    position: relative;
+}
+
+.ssp-search .search-form {
+    width: auto;
+}
+
+.ssp-results {
+    display: none;
+}
+
+.auto-complete-item {
+    border: none !important;
+    padding: 5px 0 5px 0;
+}
+
+.auto-complete-item:hover {
+    background: none;
+}
+
+.auto-complete-item b {
+    text-decoration: underline;
+}

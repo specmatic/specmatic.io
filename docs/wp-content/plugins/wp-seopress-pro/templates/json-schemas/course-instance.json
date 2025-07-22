@@ -1,0 +1,5 @@
+{
+    "@type": "CourseInstance",
+    "courseMode": "[[courseMode]]",
+    "location": "[[location]]"
+}

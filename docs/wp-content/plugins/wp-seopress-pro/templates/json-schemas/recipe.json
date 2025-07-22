@@ -1,0 +1,15 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "Recipe",
+    "name": "[[name]]",
+    "recipeCategory": "[[recipeCategory]]",
+    "image": "[[image]]",
+    "datePublished": "[[datePublished]]",
+    "description": "[[description]]",
+    "video": "[[video]]",
+    "prepTime": "[[prepTime]]",
+    "totalTime": "[[totalTime]]",
+    "recipeYield": "[[recipeYield]]",
+    "keywords": "[[keywords]]",
+    "recipeCuisine": "[[recipeCuisine]]"
+}

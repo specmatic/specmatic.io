@@ -1,0 +1,250 @@
+#ais-wrapper {
+	display: flex;
+}
+
+#ais-main {
+	padding: 1rem;
+	width: 100%;
+}
+.algolia-autocomplete {
+	width: 100%;
+}
+
+.algolia-search-box-wrapper {
+	position: relative;
+}
+
+.algolia-search-box-wrapper .search-icon {
+	position: absolute;
+	left: 0px;
+	top: 14px;
+	fill: #21A4D7;
+}
+
+#algolia-search-box {
+	margin-bottom: 3rem;
+}
+
+#algolia-search-box input {
+	border: none;
+	border-bottom: 2px solid #21A4D7;
+	background: transparent;
+	width: 100%;
+	line-height: 30px;
+	font-size: 22px;
+	padding: 10px 0 10px 30px;
+	font-weight: 200;
+	box-sizing: border-box;
+	outline: none;
+	box-shadow: none;
+	appearance:none;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	-ms-appearance:none;
+}
+
+.ais-SearchBox-form {
+	display: block;
+	position: relative;
+}
+
+.ais-SearchBox-submit[hidden],
+.ais-SearchBox-reset[hidden],
+.ais-SearchBox-loadingIndicator[hidden] {
+	display: none;
+}
+
+.algolia-autocomplete {
+	z-index: 1;
+}
+.aa-dropdown-menu {
+	/* we set the width in JS */
+	font-family: sans-serif;
+	background-color: #fff;
+	border-top: none;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	box-shadow: 0 1px 2px rgba(0,0,0,.25),0 0 1px rgba(0,0,0,.35);
+	width: 100%;
+}
+
+.aa-dropdown-menu:after {
+	content: " ";
+	display: block;
+	clear: both;
+
+}
+
+.aa-dropdown-menu .aa-input, .aa-dropdown-menu .aa-hint {
+	width: 100%;
+}
+.aa-dropdown-menu .aa-hint {
+	color: #999;
+}
+
+/* Font */
+.aa-dropdown-menu {
+	color: #1a1a1a;
+	font-size: 12px;
+}
+
+.aa-dropdown-menu a {
+	font-size: 14px;
+	color: #1a1a1a;
+	font-weight: normal;
+	text-decoration: none;
+}
+.aa-dropdown-menu a:hover {
+	text-decoration: none;
+}
+
+/* Header */
+.aa-dropdown-menu .autocomplete-header {
+	margin: 0 14px;
+	line-height: 3em;
+	border-bottom: 1px solid rgba(0,0,0,.05);
+}
+.aa-dropdown-menu .autocomplete-header-title,
+.aa-dropdown-menu .autocomplete-header-more
+{
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.aa-dropdown-menu .autocomplete-header-title {
+	float: left;
+}
+
+.aa-dropdown-menu .autocomplete-header-more {
+	float: right;
+}
+
+.aa-dropdown-menu .autocomplete-header-more a {
+	color: rgba(0,0,0,.3);
+	font-weight: bold;
+}
+
+.aa-dropdown-menu .autocomplete-header-more a:hover {
+	color:  rgba(0,0,0,.4);
+}
+
+/* Suggestion */
+
+.aa-dropdown-menu {
+	box-sizing: border-box;
+	border-radius: 0;
+	box-shadow: none;
+	margin: 0;
+}
+
+.aa-dropdown-menu .aa-suggestion {
+	box-sizing: border-box;
+}
+
+.aa-dropdown-menu .aa-suggestion:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.aa-dropdown-menu .aa-suggestion em {
+	color: #174d8c;
+	background: rgba(143,187,237,.1);
+	font-style: normal;
+}
+
+.aa-dropdown-menu .aa-suggestion .suggestion-post-title {
+	font-weight: bold;
+	display: block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.aa-dropdown-menu .aa-suggestion .suggestion-post-content {
+	color: #63676d;
+	display: block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.aa-dropdown-menu .aa-suggestion .suggestion-post-content em {
+	padding: 0 0 1px;
+	background: inherit;
+	box-shadow: inset 0 -2px 0 0 rgba(69,142,225,.8);
+	color: inherit;
+}
+
+.aa-dropdown-menu .aa-suggestion.aa-cursor {
+	background-color: #f9f9f9;
+
+}
+
+.aa-dropdown-menu a.suggestion-link {
+	display: block;
+}
+
+.aa-dropdown-menu a.suggestion-link svg {
+	vertical-align: middle;
+	fill: rgba(0,0,0,.3);
+	float: left;
+}
+
+.aa-dropdown-menu .suggestion-post-thumbnail {
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	border-radius: 3px;
+	width: 32px;
+	height: 32px;
+}
+
+.aa-dropdown-menu .suggestion-user-thumbnail {
+	float: left;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	border-radius: 16px;
+	width: 32px;
+	height: 32px;
+}
+
+/* Footer */
+.aa-dropdown-menu .autocomplete-footer-branding {
+	float: right;
+	color: rgba(0,0,0,.3);
+	margin-bottom: 7px;
+}
+
+/* Clearfix */
+.aa-dropdown-menu .clear {
+	clear: both;
+}
+
+/* Empty */
+.autocomplete-empty {
+	clear: both;
+	padding: 15px;
+}
+
+.autocomplete-empty .empty-query {
+	font-weight: bold;
+}
+
+/* Additional listing styles. */
+.search-result-title {
+	font-weight:bold;
+	width: 100%;
+	display:block;
+	padding:10px 5px 10px 15px;
+	margin-bottom:2px;
+}
+.search-result-excerpt {
+	width: 100%;
+	display:block;
+	margin-bottom:2px;
+}

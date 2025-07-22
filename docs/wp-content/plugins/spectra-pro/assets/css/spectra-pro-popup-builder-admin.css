@@ -1,0 +1,168 @@
+/* This file contains the styles used in the Popup Builder Pro Admin Page Elements */
+
+/* Columns Styling ------------------- Start */
+
+
+/* Style for all the Headings in the Admin Table */
+/* stylelint-disable selector-id-pattern */
+.post-type-spectra-popup .wp-list-table #spectra_popup_details {
+	width: 150px;
+}
+
+/* stylelint-enable selector-id-pattern */
+
+/* Style for the Switch and Quick-view Column and Row in the Admin Table */
+th.column-spectra_popup_details,
+td.column-spectra_popup_details {
+	text-align: center;
+}
+
+/* Style for the Quick-view Element in the Admin Table */
+td.spectra_popup_details.column-spectra_popup_details .spectra-popup-builder__button {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+/* Style for the Quick-view Dashicon in the Admin Table */
+td.spectra_popup_details.column-spectra_popup_details .spectra-popup-builder__button {
+	color: #50575e;
+}
+
+/* Style for everything inside the Quick View Button in the Admin Table */
+td.spectra_popup_details.column-spectra_popup_details .spectra-popup-builder__button * {
+	pointer-events: none;
+}
+
+/* Columns Styling --------------------- End */
+
+/* Modal Styling --------------------- Start */
+
+/* Style for the Modal Overlay */
+.spectra-popup-builder__modal--overlay {
+	display: none; /* Hidden by default */
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 99999;
+	backdrop-filter: blur(4px);
+	background-color: rgba(107, 114, 128, 0.75);
+	opacity: 0;
+	transition-property: opacity;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+/* Style for the Modal */
+.spectra-popup-builder__modal {
+	position: relative;
+	width: 100%;
+	max-width: 32rem;
+	border-radius: 8px;
+	background-color: white;
+	box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+	opacity: 0;
+	transition-property: all;
+    transition-timing-function: ease;
+    transition-duration: 250ms;
+}
+
+/* Style for all the padded elements in the Modal */
+.spectra-popup-builder__modal--padded {
+	padding: 16px 32px;
+}
+
+/* Style for the Modal Header */
+.spectra-popup-builder__modal--header {
+	border-bottom: 1px solid #e6e7e9;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Style for the Modal Title */
+.spectra-popup-builder__modal--title {
+	font-size: 20px;
+	line-height: 24px;
+	font-weight: 600;
+	margin: 0;
+}
+
+/* Style for the Modal Type Badge */
+.spectra-popup-builder__modal--type {
+	background-color: #f5f3ff;
+	color: #4f46e5;
+	padding: 8px 12px;
+	border-radius: 4px;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: 600;
+	text-transform: capitalize;
+}
+
+/* Style for the Modal Body */
+.spectra-popup-builder__modal--body {
+	display: grid;
+	grid-template-columns: repeat( 2, 1fr );
+	grid-gap: 1px;
+	width: 100%;
+	background-color: #e6e7e9;
+}
+
+/* Style for each cell in the Modal Body */
+.spectra-popup-builder__modal--body div {
+	background-color: white;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+/* Style for the lists in the Modal Body */
+.spectra-popup-builder__modal--body ul {
+	list-style-type: disc;
+	text-align: left;
+	padding-left: 12px;
+}
+
+/* Style for the Modal Footer */
+.spectra-popup-builder__modal--footer {
+	border-top: 1px solid #e6e7e9;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* Style for the Modal Status */
+.spectra-popup-builder__modal--status {
+	text-transform: capitalize;
+}
+
+/* Style for the Modal Close Button */
+.spectra-popup-builder__modal--close {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	position: absolute;
+	color: white;
+	top: 0;
+	right: -32px;
+	padding: 0;
+}
+/* Style for the Modal Close Button Dashicon */
+.spectra-popup-builder__modal--close .dashicons {
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+	line-height: 14px;
+}
+
+/* Style for the admin page scroll lock */
+.spectra-popup-builder__modal--scroll-lock {
+	overflow: hidden;
+}
+
+/* Modal Styling ----------------------- End */

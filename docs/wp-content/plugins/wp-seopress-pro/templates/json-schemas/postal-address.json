@@ -1,0 +1,8 @@
+{
+    "@type": "PostalAddress",
+    "streetAddress": "[[streetAddress]]",
+    "addressLocality": "[[addressLocality]]",
+    "addressRegion": "[[addressRegion]]",
+    "postalCode": "[[postalCode]]",
+    "addressCountry": "[[addressCountry]]"
+}

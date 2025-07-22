@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress Coding Standards">
+
+	
+	<description>A custom set of code standard rules to check for Nginx helper plugin.</description>
+
+	
+	<arg value="psvn"/>
+
+	
+	<arg name="parallel" value="8"/>
+
+	
+	<arg name="extensions" value="php,js"/>
+
+	
+	<file>.</file>
+
+	
+	<exclude-pattern>*/languages/*</exclude-pattern>
+	<exclude-pattern>*/admin/predis.php</exclude-pattern>	
+	<exclude-pattern>*/vendor/*</exclude-pattern>	
+
+	
+	<rule ref="WordPress">
+		<exclude name="PEAR.NamingConventions.ValidClassName.Invalid" />
+		<exclude name="PSR2.Methods.MethodDeclaration.Underscore" />
+	</rule>
+	<rule ref="WordPress-VIP-Go">
+		<exclude name="WordPress.VIP.FileSystemWritesDisallow.directory_mkdir" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_system_read_fopen" />
+		<exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_is_writable" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_system_read_fclose" />
+		<exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_fwrite" />
+		<exclude name="WordPress.VIP.FileSystemWritesDisallow.directory_rmdir" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_system_read_fwrite" />
+		<exclude name="WordPress.VIP.FileSystemWritesDisallow.file_ops_unlink" />
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.directory_mkdir" />
+		<exclude name="WordPressVIPMinimum.Functions.RestrictedFunctions.directory_rmdir" />
+	</rule>
+
+	
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="nginx-helper" />
+		</properties>
+	</rule>
+
+	
+	<rule ref="WordPress.WP.DeprecatedFunctions">
+		<properties>
+			<property name="minimum_supported_version" value="3.0" />
+		</properties>
+	</rule>
+
+	
+	<rule ref="PHPCompatibility"/>
+	<config name="testVersion" value="5.3-99.0"/>
+
+</ruleset>

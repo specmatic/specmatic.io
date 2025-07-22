@@ -1,0 +1,9 @@
+/* move down search button to be on the same height than search field */
+.wgs_wrapper .gsc-search-button input {
+    margin-top: 4px !important;
+}
+
+/* move down X button in search field */
+.gscb_a {
+	padding-top: 4px;
+}

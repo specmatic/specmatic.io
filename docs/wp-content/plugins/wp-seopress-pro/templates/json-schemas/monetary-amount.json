@@ -1,0 +1,9 @@
+{
+    "@type": "MonetaryAmount",
+    "currency": "[[currency]]",
+    "value": {
+        "@type": "QuantitativeValue",
+        "value": "[[quantity_value]]",
+        "unitText": "[[quantity_unit_text]]"
+    }
+}

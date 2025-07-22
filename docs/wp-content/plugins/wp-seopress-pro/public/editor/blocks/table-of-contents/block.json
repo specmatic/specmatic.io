@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpseopress/table-of-contents",
+  "version": "1.0.0",
+  "title": "Table of Contents",
+  "category": "wpseopress",
+  "icon": "editor-ol",
+  "description": "Creates a table of contents.",
+  "keywords": [
+    "toc",
+    "table of contents"
+  ],
+  "supports": {
+    "multiple": false,
+    "html": false,
+    "align": true,
+    "color": {
+      "background": true,
+      "gradients": true,
+      "link": true,
+      "text": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true,
+      "blockGap": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "titleLevel": {
+      "type": "string",
+      "default": "2"
+    },
+    "listTag": {
+      "type": "string",
+      "default": "ol"
+    },
+    "headings": {
+      "type": "array",
+      "default": []
+    },
+    "levels": {
+      "type": "array",
+      "default": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  },
+  "textdomain": "wp-seopress-pro",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./toc-block.js"
+}

@@ -1,0 +1,12 @@
+{
+    "@type": "Offer",
+    "name": "[[name]]",
+    "category": "[[category]]",
+    "price": "[[price]]",
+    "priceCurrency": "[[priceCurrency]]",
+    "url": "[[url]]",
+    "availability": "[[availability]]",
+    "validFrom": "[[validFrom]]",
+    "priceValidUntil": "[[priceValidUntil]]",
+    "itemCondition": "[[itemCondition]]"
+}

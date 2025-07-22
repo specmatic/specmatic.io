@@ -1,0 +1,1 @@
+.uagb-slider-container.slider-focus-mode .swiper-slide::before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;height:100%;width:100%;z-index:99;transition-property:background}.uagb-slider-container.slider-focus-mode .swiper-slide.swiper-slide-active::before{pointer-events:none}

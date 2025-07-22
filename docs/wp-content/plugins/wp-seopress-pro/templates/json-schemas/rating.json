@@ -1,0 +1,6 @@
+{
+    "@type": "Rating",
+    "ratingValue": "[[ratingValue]]",
+    "bestRating": "[[bestRating]]",
+    "worstRating": "[[worstRating]]"
+}

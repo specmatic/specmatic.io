@@ -1,0 +1,12 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "[[eventType]]",
+    "name": "[[name]]",
+    "description": "[[description]]",
+    "image": "[[image]]",
+    "url": "[[url]]",
+    "previousStartDate": "[[previousStartDate]]",
+    "startDate": "[[startDate]]",
+    "endDate": "[[endDate]]",
+    "eventStatus": "[[eventStatus]]"
+}

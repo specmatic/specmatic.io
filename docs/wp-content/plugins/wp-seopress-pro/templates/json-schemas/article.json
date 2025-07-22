@@ -1,0 +1,8 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "%%schema_article_type%%",
+    "headline": "%%schema_article_headline%%",
+    "datePublished": "%%schema_post_date%%",
+    "dateModified": "%%schema_post_modified_date%%",
+    "description": "%%schema_article_desc%%"
+}

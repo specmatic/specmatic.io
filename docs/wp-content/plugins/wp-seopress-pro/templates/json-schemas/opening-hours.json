@@ -1,0 +1,6 @@
+{
+    "@type": "OpeningHoursSpecification",
+    "opens": "[[opens]]",
+    "closes": "[[closes]]",
+    "dayOfWeek": "https://schema.org/[[dayOfWeek]]"
+}

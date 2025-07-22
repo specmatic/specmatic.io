@@ -1,0 +1,11 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "VideoObject",
+    "name": "[[name]]",
+    "description": "[[description]]",
+    "thumbnailUrl": "[[thumbnailUrl]]",
+    "uploadDate": "[[uploadDate]]",
+    "duration": "[[duration]]",
+    "contentUrl": "[[contentUrl]]",
+    "embedUrl": "[[embedUrl]]"
+}

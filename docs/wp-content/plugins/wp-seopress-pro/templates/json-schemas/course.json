@@ -1,0 +1,6 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "Course",
+    "name": "[[name]]",
+    "description": "[[description]]"
+}

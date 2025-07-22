@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpseopress/how-to-step",
+  "title": "How To Step",
+  "description": "Display a tutorial step",
+  "icon": "feedback",
+  "category": "wpseopress",
+  "textdomain": "wp-seopress-pro",
+  "parent": [
+    "wpseopress/how-to"
+  ],
+  "supports": {
+    "html": false,
+    "color": {
+      "gradients": true,
+      "link": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "schema": {
+      "type": "object",
+      "default": {}
+    }
+  }
+}

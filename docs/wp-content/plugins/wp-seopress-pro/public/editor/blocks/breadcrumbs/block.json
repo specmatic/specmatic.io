@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wpseopress/breadcrumbs",
+  "title": "Breadcrumbs",
+  "description": "Display an HTML breadcrumbs",
+  "icon": "location",
+  "category": "wpseopress",
+  "textdomain": "wp-seopress-pro",
+  "supports": {
+    "multiple": false,
+    "align": true,
+    "html": false,
+    "color": {
+      "background": true,
+      "gradients": true,
+      "link": true,
+      "text": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontStyle": true,
+      "__experimentalFontWeight": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalTextTransform": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true,
+        "fontFamily": true,
+        "fontStyle": true,
+        "letterSpacing": true,
+        "textTransform": true,
+        "lineHeight": true
+      }
+    },
+    "dimensions": {
+      "minHeight": true
+    }
+  },
+  "editorScript": "file:./index.js"
+}

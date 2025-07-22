@@ -1,0 +1,53 @@
+<wpml-config>
+	<admin-texts>
+		<key name="seopress_pro_option_name">
+			<key name="seopress_local_business_page"/>
+			<key name="seopress_local_business_type"/>
+			<key name="seopress_local_business_street_address"/>
+			<key name="seopress_local_business_address_locality"/>
+			<key name="seopress_local_business_address_region"/>
+			<key name="seopress_local_business_postal_code"/>
+			<key name="seopress_local_business_address_country"/>
+			<key name="seopress_local_business_lat"/>
+			<key name="seopress_local_business_lon"/>
+			<key name="seopress_local_business_place_id"/>
+			<key name="seopress_local_business_url"/>
+			<key name="seopress_local_business_phone"/>
+			<key name="seopress_local_business_price_range"/>
+			<key name="seopress_local_business_cuisine"/>
+			<key name="seopress_local_business_menu"/>
+			<key name="seopress_local_business_accepts_reservations"/>
+			<key name="seopress_local_business_opening_hours">
+				<key name="*">
+					<key name="open"/>
+					<key name="start">
+						<key name="hours"/>
+						<key name="mins"/>
+					</key>
+					<key name="end">
+						<key name="hours"/>
+						<key name="mins"/>
+					</key>
+				</key>
+			</key>
+			<key name="seopress_rich_snippets_publisher_logo"/>
+			<key name="seopress_rich_snippets_publisher_logo_width"/>
+			<key name="seopress_rich_snippets_publisher_logo_height"/>
+			<key name="seopress_breadcrumbs_separator"/>
+			<key name="seopress_breadcrumbs_i18n_here"/>
+			<key name="seopress_breadcrumbs_i18n_home"/>
+			<key name="seopress_breadcrumbs_i18n_author"/>
+			<key name="seopress_breadcrumbs_i18n_404"/>
+			<key name="seopress_breadcrumbs_i18n_search"/>
+			<key name="seopress_breadcrumbs_i18n_no_results"/>
+			<key name="seopress_breadcrumbs_i18n_attachments"/>
+			<key name="seopress_breadcrumbs_i18n_paged"/>
+			<key name="seopress_404_redirect_custom_url"/>
+			<key name="seopress_404_enable_mails_from"/>
+			<key name="seopress_news_name"/>
+		</key>
+	</admin-texts>
+	  <custom-fields>
+		<custom-field action="translate">_seopress_news_disabled</custom-field>
+	</custom-fields>
+</wpml-config>

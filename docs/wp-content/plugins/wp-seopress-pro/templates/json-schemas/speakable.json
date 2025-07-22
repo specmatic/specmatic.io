@@ -1,0 +1,6 @@
+{
+	"@type": "SpeakableSpecification",
+    "cssSelector": [
+        "[[cssSelector]]"
+    ]
+}

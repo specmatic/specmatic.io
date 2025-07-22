@@ -1,0 +1,23 @@
+.DIVI_wpDataTable::before {
+    content: "" !important;
+    background-image: url("https://specmatic.io/wp-content/plugins/wpdatatables/integrations/page_builders/divi-wpdt/styles/media/table-icon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
+    width: 18px;
+    height: 18px;
+    background-size: cover;
+    /*display: inline-block;*/
+}
+
+.DIVI_wpDataChart::before {
+    content: "" !important;
+    background-image: url("https://specmatic.io/wp-content/plugins/wpdatatables/integrations/page_builders/divi-wpdt/styles/media/chart-icon.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 0 auto;
+    width: 18px;
+    height: 18px;
+    background-size: cover;
+    /*display: inline-block;*/
+}

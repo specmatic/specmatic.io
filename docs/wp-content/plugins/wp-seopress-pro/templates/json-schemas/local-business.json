@@ -1,0 +1,13 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "[[type]]",
+    "image": "[[image]]",
+    "@id": "[[id]]",
+    "name": "[[name]]",
+    "url": "[[url]]",
+    "telephone": "[[telephone]]",
+    "priceRange": "[[priceRange]]",
+    "servesCuisine": "[[servesCuisine]]",
+    "menu": "[[menu]]",
+    "acceptsReservations": "[[acceptsReservations]]"
+}
