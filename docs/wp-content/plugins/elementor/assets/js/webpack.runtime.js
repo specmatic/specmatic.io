@@ -1,4 +1,4 @@
-/*! elementor - v3.30.0 - 01-07-2025 */
+/*! elementor - v3.30.0 - 22-07-2025 */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({});
@@ -124,7 +124,7 @@
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
 /******/ 			if (chunkId === "lightbox") return "" + chunkId + ".74688eb10c7852662847.bundle.js";
-/******/ 			if (chunkId === "text-path") return "" + chunkId + ".795be0048f5240994e8b.bundle.js";
+/******/ 			if (chunkId === "text-path") return "" + chunkId + ".ffadd93cf796f64a4d61.bundle.js";
 /******/ 			if (chunkId === "accordion") return "" + chunkId + ".7b5b5744bdd225280eca.bundle.js";
 /******/ 			if (chunkId === "alert") return "" + chunkId + ".b696182ec6f18a35bc69.bundle.js";
 /******/ 			if (chunkId === "counter") return "" + chunkId + ".f359dee9199f5aad06c6.bundle.js";

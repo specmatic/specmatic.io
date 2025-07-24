@@ -1,4 +1,4 @@
-/*! elementor - v3.30.0 - 01-07-2025 */
+/*! elementor - v3.30.0 - 22-07-2025 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -42912,7 +42912,7 @@ module.exports = {
               font_name: font
             },
             unique_id: 'enqueue_google_fonts_' + font
-          });
+          }, true);
         }
         break;
       case 'earlyaccess':
