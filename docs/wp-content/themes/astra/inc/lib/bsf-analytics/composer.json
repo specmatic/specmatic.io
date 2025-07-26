@@ -4,7 +4,7 @@
 	"type": "wordpress-plugin",
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"wp-coding-standards/wpcs": "2.2.1",
+		"wp-coding-standards/wpcs": "2.3.0",
 		"phpcompatibility/phpcompatibility-wp": "2.1.0",
 		"brainmaestro/composer-git-hooks": "^2.6"
 	},
