@@ -45,7 +45,7 @@
         "doctrine\/annotations": "~1.10",
         "ocramius\/proxy-manager": "^2.11.2",
         "friendsofphp\/php-cs-fixer": "^2.4",
-        "phpstan\/phpstan": "^0.12"
+        "phpstan\/phpstan": "^2.0"
     },
     "provide": {
         "psr\/container-implementation": "^1.0"
