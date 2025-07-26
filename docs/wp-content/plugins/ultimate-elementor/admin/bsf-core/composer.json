@@ -13,7 +13,7 @@
     "composer/installers": "^2.0"
   },
   "require-dev": {
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0.0",
     "phpcompatibility/phpcompatibility-wp": "*",
     "wp-cli/dist-archive-command": "^2.0",
     "wp-coding-standards/wpcs": "^2.3"
