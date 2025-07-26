@@ -3,7 +3,7 @@
   "description": "Extend the free Simply Static plugin with powerful features like search, forms and new deployment options.",
   "type": "wordpress-plugin",
   "require": {
-    "algolia/algoliasearch-client-php": "^3.4.1",
+    "algolia/algoliasearch-client-php": "^4.0.0",
     "voku/html-min": "^4.5.1",
     "tedivm/jshrink": "1.7.0",
     "aws/aws-sdk-php": "^3.336.0",
