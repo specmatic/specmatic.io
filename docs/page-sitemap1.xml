@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
-<loc>https://specmatic.io/terms-of-service/</loc>
-<lastmod>2025-07-24T16:18:34+05:30</lastmod></url>
-<url>
 <loc>https://specmatic.io/</loc>
-<lastmod>2025-07-24T15:40:40+05:30</lastmod></url>
+<lastmod>2025-07-28T08:39:34+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/about-us/</loc>
+<lastmod>2025-07-28T08:32:47+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/terms-of-service/</loc>
+<lastmod>2025-07-28T05:05:04+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/eula/</loc>
+<lastmod>2025-07-28T05:03:41+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/2-week-signup/</loc>
 <lastmod>2025-07-24T15:36:37+05:30</lastmod></url>
@@ -47,9 +53,6 @@
 <url>
 <loc>https://specmatic.io/security-policy/</loc>
 <lastmod>2025-05-01T10:58:33+05:30</lastmod></url>
-<url>
-<loc>https://specmatic.io/eula/</loc>
-<lastmod>2025-04-04T16:12:57+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/case-studies/how-tmforum-automated-their-api-factory/</loc>
 <lastmod>2024-12-22T23:12:30+05:30</lastmod></url>
