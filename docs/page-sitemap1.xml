@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
 <loc>https://specmatic.io/</loc>
-<lastmod>2025-07-28T08:39:34+05:30</lastmod></url>
+<lastmod>2025-07-29T06:31:32+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/insights/</loc>
+<lastmod>2025-07-28T18:06:33+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/terms-of-service/</loc>
+<lastmod>2025-07-28T11:18:38+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/about-us/</loc>
 <lastmod>2025-07-28T08:32:47+05:30</lastmod></url>
-<url>
-<loc>https://specmatic.io/terms-of-service/</loc>
-<lastmod>2025-07-28T05:05:04+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/eula/</loc>
 <lastmod>2025-07-28T05:03:41+05:30</lastmod></url>
@@ -26,9 +29,6 @@
 <url>
 <loc>https://specmatic.io/articles/</loc>
 <lastmod>2025-07-24T14:02:08+05:30</lastmod></url>
-<url>
-<loc>https://specmatic.io/insights/</loc>
-<lastmod>2025-07-24T11:49:54+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/specmatic-studio/</loc>
 <lastmod>2025-07-24T11:45:33+05:30</lastmod></url>
