@@ -1,0 +1,1 @@
+.brxe-filter-search{position:relative;width:100%}.brxe-filter-search :where(input){width:100%}.brxe-filter-search .icon{cursor:pointer;display:grid;height:100%;margin-inline:10px;place-items:center;position:absolute;right:0;top:50%;transform:translateY(-50%);transition:all .3s;visibility:hidden}.brxe-filter-search .icon.brx-show{visibility:visible}

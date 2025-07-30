@@ -568,8 +568,8 @@ html {
 	font-weight: 300 !important;
 }
 
-/** General 3 >> Uael post bg wrap **/
-.mtp-6395 .uael-post__bg-wrap {
+/** General 3 >> Div **/
+.mtp-6395 .uael-post-grid__inner > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div {
 	border-bottom-right-radius: 8px !important;
 	border-bottom-left-radius: 8px !important;
 }
@@ -656,18 +656,6 @@ html {
 /** General 3 >> Attachment medium large **/
 .mtp-6395 .attachment-medium_large {
 	border-radius: 8px 8px 0 0 !important;
-}
-
-/** General 3 >> Span **/
-.mtp-2003 .legend-container > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(1) > span {
-	position: relative !important;
-	top: -5px !important;
-}
-
-/** General 3 >> Elementor widget container **/
-.mtp-9294 .elementor-widget-uael-team-member .elementor-widget-container {
-	background-color: rgb(255, 255, 255) !important;
-	border-radius: 15px 15px 15px 015px !important;
 }
 
 
