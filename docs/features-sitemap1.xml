@@ -39,6 +39,12 @@
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2023/07/specmaticjms-mocking.jpg]]></image:loc>
 </image:image></url>
 <url>
+<loc>https://specmatic.io/features/contract-testing-avro-schema-files-asyncapi-specmatic/</loc>
+<lastmod>2025-07-28T06:21:14+05:30</lastmod>
+<image:image>
+<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Avro-demo-thumbnail.jpg]]></image:loc>
+</image:image></url>
+<url>
 <loc>https://specmatic.io/features/contract-driven-development-for-http-by-leveraging-your-openapi-specs-as-executable-contracts/</loc>
 <lastmod>2024-08-21T13:37:00+05:30</lastmod></url>
 <url>
