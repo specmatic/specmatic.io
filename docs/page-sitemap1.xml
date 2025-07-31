@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
+<loc>https://specmatic.io/specmatic-updates/</loc>
+<lastmod>2025-07-31T09:03:08+05:30</lastmod></url>
+<url>
+<loc>https://specmatic.io/</loc>
+<lastmod>2025-07-31T08:51:53+05:30</lastmod>
+<image:image>
+<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Harness-API-Specifications-as-Executable-Contracts.png]]></image:loc>
+</image:image></url>
+<url>
 <loc>https://specmatic.io/contact-us/</loc>
 <lastmod>2025-07-31T07:07:08+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/search/</loc>
 <lastmod>2025-07-31T06:49:57+05:30</lastmod></url>
-<url>
-<loc>https://specmatic.io/</loc>
-<lastmod>2025-07-31T06:41:09+05:30</lastmod>
-<image:image>
-<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Harness-API-Specifications-as-Executable-Contracts.png]]></image:loc>
-</image:image></url>
 <url>
 <loc>https://specmatic.io/articles/</loc>
 <lastmod>2025-07-31T04:14:30+05:30</lastmod>
@@ -80,9 +83,6 @@
 <image:image>
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2023/09/specmatic-roadmap.jpg]]></image:loc>
 </image:image></url>
-<url>
-<loc>https://specmatic.io/specmatic-updates/</loc>
-<lastmod>2025-07-30T15:24:43+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/pricing/</loc>
 <lastmod>2025-07-30T14:57:19+05:30</lastmod></url>
