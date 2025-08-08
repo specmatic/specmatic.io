@@ -4,40 +4,14 @@
  * @author Alexander Gilmanov
  * @since 18.10.2016
  */
-/**
- * Define popover options
- */
 
-var popoverOptions = {
-    html: true,
-    template: '<div class="popover wdt-premium-popover" role="tooltip">' +
-        '<div class="arrow"></div>' +
-        '<h3 class="popover-header">' +
-        '<i class="wpdt-icon-star-full m-r-5" style="color: #FFC078;"></i>' +
-        (wdtWpDataTablesPopoverStrings.title ? wdtWpDataTablesPopoverStrings.title : 'This is a premium feature') +
-        '<button type="button" class="closePopover">' +
-        '<span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span></button></h3>' +
-        '<div class="popover-body"><span>' + (wdtWpDataTablesPopoverStrings.description ? wdtWpDataTablesPopoverStrings.description : 'This feature is available only in premium version of wpDataTables') + '</span> ' +
-        '<div class="popover-footer"><a id="wdt-premium-compare-link">' + (wdtWpDataTablesPopoverStrings.compare_link ? wdtWpDataTablesPopoverStrings.compare_link : 'Compare and View Pricing') + '</a></div></div' +
-        '</div>',
-    content: function () {
-        var content = jQuery(this).attr("data-popover-content");
-        return jQuery(content).children(".popover-body").html();
-    },
-    title: function () {
-        var title = jQuery(this).attr("data-popover-content");
-        return jQuery(title).children(".popover-heading").html();
-    }
-}
 /**
  * Hide tooltip on button click or on mouseout event
  */
 var wdtHideTooltip = function () {
     jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').on('click', function () {
         jQuery(this).wdtBootstrapTooltip('hide');
-    });
-
-    jQuery('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').mouseout(function (event) {
+    }).on('mouseout', function (event) {
         var e = event.toElement || event.relatedTarget;
         if (e != null && (e.parentNode == this || e == this)) {
             return;
@@ -55,20 +29,19 @@ jQuery.fn.wdtBootstrapTooltip = jQuery.fn.tooltip;
  * Extend jQuery to use our custom function for popover
  */
 jQuery.fn.wdtBootstrapPopover = jQuery.fn.popover;
-
 /**
  * Extend jQuery to use our custom function for tabs
  */
 jQuery.fn.wdtBootstrapTabs = jQuery.fn.tab;
+
 let lastClickedElement = null;
 jQuery(document).on('click', '*', function (e) {
     lastClickedElement = this;
 });
+
 /**
- * Extend jQuery to use our custom function for selectpicker
- */
-jQuery.fn.wdtBootstrapSelectPicker= jQuery.fn.selectpicker;
-/**
+
+ /**
  * Extend jQuery to use AnimateCSS
  */
 jQuery.fn.extend({
@@ -187,29 +160,32 @@ jQuery.fn.extend({
         /**
          * Attach tooltips
          */
-        $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').wdtBootstrapTooltip();
-
-        wdtHideTooltip();
+        if ($('.wdt-datatables-admin-wrap') && typeof jQuery.fn.wdtBootstrapTooltip !== 'undefined') {
+            $('.wdt-datatables-admin-wrap [data-toggle="tooltip"]').wdtBootstrapTooltip();
+            wdtHideTooltip();
+        }
 
         /**
          * Attach HTML Popovers (Hints with images)
          */
-        $('[data-toggle="html-popover"]').wdtBootstrapPopover({
-            html: true,
-            content: function () {
-                var content = $(this).attr("data-popover-content");
-                return $(content).children(".popover-body").html();
-            },
-            title: function () {
-                var title = $(this).attr("data-popover-content");
-                return $(title).children(".popover-heading").html();
-            }
-        });
+        if ($('.wdt-datatables-admin-wrap') && typeof jQuery.fn.wdtBootstrapPopover !== 'undefined') {
+            $('[data-toggle="html-popover"]').wdtBootstrapPopover({
+                html: true,
+                content: function () {
+                    var content = $(this).attr("data-popover-content");
+                    return $(content).children(".popover-body").html();
+                },
+                title: function () {
+                    var title = $(this).attr("data-popover-content");
+                    return $(title).children(".popover-heading").html();
+                }
+            });
+        }
 
         /**
          * Apply selectpicker
          */
-        $('select.selectpicker').wdtBootstrapSelectPicker();
+        $('.wpdt-c select.selectpicker').selectpicker();
 
 
         /**
@@ -239,6 +215,11 @@ jQuery.fn.extend({
             });
         });
 
+        $(".wpdt-c .wdt-datatables-admin-wrap div.toggle-switch input[hidden='hidden']").each(function (index, value) {
+            $(this).removeAttr("hidden")
+        });
+
+
         /**
          * Get only text when copy shortcode from browse
          */
@@ -253,8 +234,8 @@ jQuery.fn.extend({
             document.execCommand("copy");
             $temp.remove();
             wdtNotify(
-                wpdatatables_edit_strings.success,
-                wpdatatables_edit_strings.shortcodeSaved,
+                wpdatatables_edit_strings.success_common,
+                wpdatatables_edit_strings.shortcodeSaved_common,
                 'success'
             );
         });
@@ -269,22 +250,28 @@ jQuery.fn.extend({
             var type = $(this).attr('data-type');
             var input = $("input[name='" + fieldName + "']");
             var currentVal = parseInt(input.val());
+            var fontSizesArr = ['font-size', 'wdt-font-size', 'wdt-table-font-size'];
             if (!isNaN(currentVal)) {
                 if (type == 'minus') {
 
                     if (currentVal > input.attr('min')) {
-                        input.val(currentVal - 1).change();
+                        input.val(currentVal - 1).trigger("change");
                     }
                     if (parseInt(input.val()) == input.attr('min')) {
                         $(this).attr('disabled', true);
                     }
 
                 } else if (type == 'plus') {
-                    input.val(currentVal + 1).change();
+                    input.val(currentVal + 1).trigger("change");
                     $('.wdt-button-minus').attr('disabled', false);
                 }
             } else {
-                input.val(1).change();
+                if (fontSizesArr.includes(fieldName)) {
+                    input.val(parseInt(input.attr('min')));
+                } else {
+                    input.val(1).trigger("change");
+                }
+
             }
         });
         $(".input-number").on("change", function (e) {
@@ -308,8 +295,8 @@ jQuery.fn.extend({
             document.execCommand("copy");
             $temp.remove();
             wdtNotify(
-                wpdatatables_edit_strings.success,
-                wpdatatables_edit_strings.shortcodeSaved,
+                wpdatatables_edit_strings.success_common,
+                wpdatatables_edit_strings.shortcodeSaved_common,
                 'success'
             );
         });
@@ -338,110 +325,7 @@ jQuery.fn.extend({
         $(".fg-float")[0] && $(".fg-float .form-control").each(function () {
             var i = $(this).val();
             0 == !i.length && $(this).closest(".fg-line").addClass("fg-toggled")
-        });
-
-        /**
-         * Popover for select tables
-         */
-
-        $('[data-toggle="html-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
-            var $popup = $(this);
-            $(this).next('.popover').find('button.closePopover').click(function (e) {
-                $popup.wdtBootstrapPopover('hide');
-            });
-            $('#wdt-premium-compare-link').click(function () {
-                $(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
-            });
-        });
-
-
-        /**
-         * Close Popover on Esc
-         */
-        $(document).keyup(function (event) {
-            if (event.which === 27) {
-                $('[data-toggle="html-premium-popover"]').wdtBootstrapPopover('hide');
-                $('[data-toggle="html-button-premium-popover"]').wdtBootstrapPopover('hide');
-                $('[data-toggle="html-checkbox-premium-popover"]').wdtBootstrapPopover('hide');
-                $('[data-toggle="html-input-premium-popover"]').wdtBootstrapPopover('hide');
-            }
-        });
-
-        /**
-         * Popover for checkboxes
-         */
-        $('[data-toggle="html-checkbox-premium-popover"]').wdtBootstrapPopover('destroy').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
-            var $popup = $(this);
-            $popup.next('.popover').find('button.closePopover').click(function (e) {
-                $popup.wdtBootstrapPopover('hide');
-                $popup.siblings('input[type="checkbox"].wdt-premium-feature').prop("checked", false);
-            });
-            $('#wdt-premium-compare-link').click(function () {
-                $(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
-            });
-            $popup.children('span').removeClass("opacity-6");
-        }).on('hidden.bs.popover', function () {
-            var elementInput = $(this);
-            var elementSpan = $(this).children('span');
-            if (elementSpan.hasClass('opacity-6')) {
-                elementSpan.removeClass('opacity-6');
-            } else {
-                elementSpan.addClass('opacity-6');
-            }
-            elementInput.siblings('input[type="checkbox"].wdt-premium-feature').prop("checked", false);
         })
-
-        /**
-         * Popover for input fields
-         */
-        $('[data-toggle="html-input-premium-popover"]').on('focus', function () {
-            $('[data-toggle="html-input-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
-                var $popup = $(this);
-                $(this).next('.popover').find('button.closePopover').click(function (e) {
-                    $popup.wdtBootstrapPopover('hide');
-                });
-                $('#wdt-premium-compare-link').click(function () {
-                    $(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
-                });
-            })
-            if ($('.wdt-premium-popover').is(':visible')) {
-                $(this).wdtBootstrapPopover('hide');
-            } else {
-                $(this).wdtBootstrapPopover('show');
-            }
-
-        });
-
-        /**
-         * Popover for select elements(some options)
-         */
-        $('#wdt-column-values, #wdt-chart-row-range-type').on("change", function () {
-            if ($(this).val() == 'foreignkey' ||
-                $(this).val() == 'list' ||
-                $(this).val() == 'pick_rows') {
-                popoverOnChange(this.id)
-            } else {
-                $('#' + this.id).wdtBootstrapPopover('destroy');
-            }
-        });
-
-
-
-        /**
-         * Popover for select elements(all options)
-         */
-        $('#wp-render-filter, #wdt-possible-values-ajax, #horizontal-axis-direction, #vertical-axis-direction, #wdt-column-rotate-header-name').on("change", function () {
-            popoverOnChange(this.id)
-        });
-
-        /**
-         * Popover for buttons
-         */
-        $('[data-toggle="html-button-premium-popover"]').on("click", function (e) {
-            e.stopImmediatePropagation()
-            e.preventDefault()
-            popoverOnClick()
-        });
 
         $('#wpdt-views .nav-item').on('click', function (e) {
             e.preventDefault()
@@ -495,6 +379,8 @@ jQuery.fn.extend({
 
             $(this).addClass('active').siblings().removeClass('active');
         })
+
+
     });
 
 })(jQuery);
@@ -510,38 +396,9 @@ jQuery(window).on('load', function () {
  * Show preloader before leaving the page
  */
 window.onbeforeunload = function (e) {
-    jQuery('.wdt-preload-layer').animateFadeIn();
+    if (window.reportbuilderobj == 'undifined') jQuery('.wdt-preload-layer').animateFadeIn();
 };
 
-/**
- * Popover function for select options
- */
-function popoverOnChange(selector) {
-    jQuery("#" + selector).wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
-        var $popup = jQuery(this);
-        jQuery(this).next('.popover').find('button.closePopover').click(function (e) {
-            $popup.wdtBootstrapPopover('hide');
-        });
-        jQuery('#wdt-premium-compare-link').click(function () {
-            jQuery(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
-        });
-    }).wdtBootstrapPopover('show');
-}
-
-/**
- * Popover for button click
- */
-function popoverOnClick() {
-    jQuery('[data-toggle="html-button-premium-popover"]').wdtBootstrapPopover(popoverOptions).on('shown.bs.popover', function () {
-        var $popup = jQuery(this);
-        jQuery(this).next('.popover').find('button.closePopover').click(function (e) {
-            $popup.wdtBootstrapPopover('hide');
-        });
-        jQuery('#wdt-premium-compare-link').click(function () {
-            jQuery(location).attr('href', wdtWpDataTablesPage.liteVSPremiumUrl);
-        });
-    }).wdtBootstrapPopover('toggle');
-}
 
 /**
  * Growl notification in the right top corner
@@ -561,6 +418,7 @@ function wdtNotify(title, message, type) {
         type = 'info';
     }
 
+
     switch (type) {
         case 'danger':
             icon = 'wpdt-icon-exclamation-triangle';
@@ -570,6 +428,8 @@ function wdtNotify(title, message, type) {
             icon = 'wpdt-icon-check-circle-full';
             break;
     }
+
+    let closeString = typeof (wpdatatables_edit_strings) !== 'undefined' ? wpdatatables_edit_strings.close_common : wpdatatables_frontend_strings.close_common_wpdatatables;
 
     jQuery.growl({
         icon: icon,
@@ -600,9 +460,7 @@ function wdtNotify(title, message, type) {
         },
         icon_type: 'class',
         template: '<div data-growl="container" class="wpdt-c alert" role="alert">' +
-            '<button type="button" class="close" data-growl="dismiss">' +
-            '<span aria-hidden="true">&times;</span>' +
-            '<span class="sr-only">' + wpdatatables_edit_strings.close + '</span>' +
+            '<span class="sr-only">' + closeString + '</span>' +
             '</button>' +
             '<span data-growl="icon"></span>' +
             '<span data-growl="title"></span>' +
@@ -610,4 +468,39 @@ function wdtNotify(title, message, type) {
             '<a href="#" data-growl="url"></a>' +
             '</div>'
     });
+}
+
+/**
+ * Opens WP media uploader on browse button click
+ * @param customUploader
+ */
+
+function openCustomMediaUploader(customUploader = null) {
+    (function ($) {
+        let attachment = '';
+
+        //If the uploader object has already been created, reopen the dialog
+        if (customUploader) {
+            customUploader.open();
+            return;
+        }
+
+        customUploader = wp.media.frames.file_frame = wp.media({
+            title: wpdatatables_edit_strings.selectExcelCsv_common,
+            button: {
+                text: wpdatatables_edit_strings.chooseFile_common
+            },
+            multiple: false,
+            library: {
+                type: 'application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        });
+
+        customUploader.on('select', function () {
+            attachment = customUploader.state().get('selection').first().toJSON();
+            $('.input-url-path').val(attachment.url);
+        });
+
+        customUploader.open();
+    })(jQuery);
 }

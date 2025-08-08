@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-
-
 @font-face {
   font-family: 'wpDataTablesIcons' !important;
   src: url(https://specmatic.io/wp-content/plugins/wpdatatables/assets/fonts/wpDataTablesIcons.eot);
@@ -1569,10 +1566,10 @@ html.ismobile .page-loader {
 }
 
 @media print {
-  @page {
+@page {
     margin: 0;
     size: auto;
-  }
+}
 
   body {
     margin: 0mm 0mm 0mm 0mm !important;
@@ -1978,7 +1975,7 @@ html.ismobile .page-loader {
 
 .wpdt-c .bootstrap-select > .btn-default {
   background: none !important;
-  border-bottom: 1px solid #e0e0e0 !important;
+  border-bottom: 1px solid #c4c5c6 !important;
   border-radius: 0;
   padding-left: 0;
   padding-right: 0;
@@ -2264,10 +2261,24 @@ html.ismobile .page-loader {
   background: #d4d4d4;
   padding: 5px 10px;
   bottom: -30px;
+  font-size: 13px;
 }
 
 .wpdt-c table.wpDataTable thead .noUi-tooltip {
   bottom: 25px;
+}
+
+.wpdt-c table.wpDataTable thead .wdt-range-custom-unlimited {
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+}
+.wpdt-c table.wpDataTable tfoot .wdt-range-custom-unlimited {
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
 }
 
 .wpdt-c .cp-container {
