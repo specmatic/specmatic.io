@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
-<loc>https://specmatic.io/features/transform-your-arazzo-specs-into-workflow-tests-in-seconds-with-specmatic/</loc>
-<lastmod>2025-07-31T16:17:17+05:30</lastmod></url>
+<loc>https://specmatic.io/features/author-test-arazzo-api-workflows-drag-drop-simplicity/</loc>
+<lastmod>2025-08-13T10:25:30+05:30</lastmod>
+<image:image>
+<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/08/Arazzo-Demo.jpg]]></image:loc>
+</image:image></url>
 <url>
 <loc>https://specmatic.io/features/transform-your-asyncapi-specs-into-executable-contracts-in-seconds-with-specmatic/</loc>
 <lastmod>2025-07-30T15:29:40+05:30</lastmod></url>
