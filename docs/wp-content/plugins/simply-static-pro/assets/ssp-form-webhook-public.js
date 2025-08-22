@@ -108,34 +108,86 @@ if (null !== form_config_element) {
 
             // Adjust the form output depending on the plugin.
             let spinner;
+            let submitButton;
 
             switch (settings.form_plugin) {
                 case 'cf7':
                     spinner = document.querySelector('.wpcf7-spinner');
+                    submitButton = form.querySelector('input[type="submit"]');
 
                     if (spinner) {
                         spinner.style.display = 'none';
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
                     }
                     break;
                 case 'elementor_forms':
                     spinner = document.querySelector('.elementor-message');
+                    submitButton = form.querySelector('button[type="submit"]');
 
                     if (spinner) {
                         spinner.style.display = 'none';
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
                     }
                     break;
                 case 'bricks_forms':
                     spinner = document.querySelector('.loading');
+                    submitButton = form.querySelector('button[type="submit"]');
 
                     if (spinner) {
                         spinner.style.display = 'none';
                     }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
                     break;
                 case 'gravity_forms':
                     spinner = document.querySelector('.gform-loader');
+                    submitButton = form.querySelector('input[type="submit"]');
 
                     if (spinner) {
                         spinner.style.display = 'none';
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+                    break;
+                case 'wpforms':
+                    spinner = document.querySelector('.wpforms-submit-spinner');
+                    submitButton = form.querySelector('button[type="submit"]');
+
+                    if (spinner) {
+                        spinner.style.display = 'none';
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+                    break;
+                case 'wsf_form':
+                    submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
+                    }
+                    break;
+                case 'fluent_forms':
+                    spinner = document.querySelector('.ff-loading-bar');
+                    submitButton = form.querySelector('button[type="submit"]');
+
+                    if (spinner) {
+                        spinner.style.display = 'none';
+                    }
+
+                    if (submitButton) {
+                        submitButton.disabled = true;
                     }
                     break;
             }
