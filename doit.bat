@@ -2,7 +2,7 @@
 
 :: Remove the docs directory
 echo Removing docs directory...
-:: rmdir /s /q docs
+rmdir /s /q docs
 
 :: Create the docs directory
 echo Creating docs directory...

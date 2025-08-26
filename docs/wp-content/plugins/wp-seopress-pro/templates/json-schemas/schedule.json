@@ -1,8 +1,0 @@
-{
-    "@type": "Schedule",
-    "duration": "[[duration]]",
-    "repeatCount": "[[repeatCount]]",
-    "repeatFrequency": "[[repeatFrequency]]",
-    "startDate": "[[startDate]]",
-    "endDate": "[[endDate]]"
-}

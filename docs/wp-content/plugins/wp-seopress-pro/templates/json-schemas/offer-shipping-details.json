@@ -1,8 +1,0 @@
-{
-    "@type": "OfferShippingDetails",
-    "shippingRate": {
-        "@type": "MonetaryAmount",
-        "value": "[[shippingAmount]]",
-        "currency": "[[currency]]"
-    }
-}

@@ -1,1 +1,0 @@
-document.addEventListener("DOMContentLoaded",()=>{let e=()=>fadin(".ast-fade-up",{delay:200});e(),document.addEventListener("change",()=>{setTimeout(e,1e3)}),document.addEventListener("scroll",e)});

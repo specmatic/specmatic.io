@@ -1,7 +1,0 @@
-{
-    "$schema": "https://schemas.metabox.io/relationships.json",
-    "id": "relationships",
-    "from": "post",
-    "to": "post",
-    "reciprocal": true
-}

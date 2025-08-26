@@ -1,9 +1,0 @@
-{
-    "@type": "Question",
-    "name": "[[name]]",
-    "answerCount": "[[answerCount]]",
-    "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "[[text]]"
-    }
-}
