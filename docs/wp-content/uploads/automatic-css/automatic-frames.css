@@ -1,1 +1,36 @@
-:root{--fr-bg-light:var(--bg-light);--fr-bg-dark:var(--bg-dark);--fr-text-light:var(--text-light);--fr-text-dark:var(--text-dark);--fr-card-padding:var(--card-padding,var(--space-m));--fr-card-gap:var(--card-gap,var(--space-s));--fr-card-border-size:var(--card-border-width,.15rem);--fr-card-border-color:var(--card-border-color,var(--neutral-light));--fr-card-border-style:var(--card-border-style,solid);--fr-card-radius:var(--card-radius,var(--radius));--fr-card-avatar-radius:var(--card-avatar-radius,50vw);--fr-lede-width:60ch;--fr-list-pad-y:.75em;--fr-list-pad-x:1.25em;--fr-hero-padding:var(--section-space-xl)}.fr-lede,p.fr-lede{max-width:60ch}.fr-hero-padding{padding-block:var(--fr-hero-padding)}.fr-text--light{color:var(--text-light)}.fr-text--dark{color:var(--text-dark)}.fr-bg--light{background-color:var(--bg-light)}.fr-bg--dark{background-color:var(--bg-dark)}
+/* File: automatic-frames.css - Version: 3.3.5 - Generated: 2025-08-26 17:04:11 */
+:root {
+  --fr-bg-light: var(--bg-light);
+  --fr-bg-dark: var(--bg-dark);
+  --fr-text-light: var(--text-light);
+  --fr-text-dark: var(--text-dark);
+  --fr-card-padding: var(--card-padding, var(--space-m));
+  --fr-card-gap: var(--card-gap, var(--space-s));
+  --fr-card-border-size: var(--card-border-width, 0.15rem);
+  --fr-card-border-color: var(--card-border-color, var(--neutral-light));
+  --fr-card-border-style: var(--card-border-style, solid);
+  --fr-card-radius: var(--card-radius, var(--radius));
+  --fr-card-avatar-radius: var(--card-avatar-radius, 50vw);
+  --fr-lede-width: 60ch;
+  --fr-list-pad-y: 0.75em;
+  --fr-list-pad-x: 1.25em;
+  --fr-hero-padding: var(--section-space-xl);
+}
+.fr-lede, p.fr-lede {
+  max-width: 60ch;
+}
+.fr-hero-padding {
+  padding-block: var(--fr-hero-padding);
+}
+.fr-text--light {
+  color: var(--text-light);
+}
+.fr-text--dark {
+  color: var(--text-dark);
+}
+.fr-bg--light {
+  background-color: var(--bg-light);
+}
+.fr-bg--dark {
+  background-color: var(--bg-dark);
+}
