@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "async-api-spec": 3,
     "grpc-spec": 3,
     "graphql-spec": 3,
-    "arazzo-spec": 3,
+    "arazzo-spec": 5,
     "resp-spec": 1,
     "jdbc-spec": 1,
   };
@@ -49,8 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const pricingTiers = [
     { maxUsers: 50, price: 45 },
     { maxUsers: 100, price: 20 },
-    { maxUsers: 250, price: 8 },
-    { maxUsers: 500, price: 2 },
+    { maxUsers: 250, price: 17 },
+    { maxUsers: 500, price: 10 },
     { maxUsers: 1000, price: 0.5 },
     { maxUsers: 1500, price: 0.3 },
     { maxUsers: 2000, price: 0.2 },
