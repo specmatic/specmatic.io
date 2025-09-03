@@ -450,7 +450,7 @@
     content: "";
     height: 11px;
     width: 11px;
-    background-image: url(../../img/icons.png);
+    background-image: url(https://specmatic.io/wp-content/plugins/wpdatatables/assets/img/icons.png);
     background-repeat: no-repeat;
     background-position: -12px 0;
 
@@ -471,7 +471,7 @@
     content: "";
     height: 11px;
     width: 11px;
-    background-image: url(../../img/icons.png);
+    background-image: url(https://specmatic.io/wp-content/plugins/wpdatatables/assets/img/icons.png);
     background-repeat: no-repeat;
     background-position: -24px 0;
 }
