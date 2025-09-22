@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
+<loc>https://specmatic.io/</loc>
+<lastmod>2025-09-22T20:46:22+05:30</lastmod>
+<image:image>
+<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Harness-API-Specifications-as-Executable-Contracts.png]]></image:loc>
+</image:image></url>
+<url>
 <loc>https://specmatic.io/roadmap/</loc>
-<lastmod>2025-09-20T14:18:16+05:30</lastmod>
+<lastmod>2025-09-22T10:21:37+05:30</lastmod>
 <image:image>
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2023/09/specmatic-roadmap.jpg]]></image:loc>
 </image:image></url>
@@ -10,12 +16,6 @@
 <lastmod>2025-09-20T13:54:24+05:30</lastmod>
 <image:image>
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Screenshot-1.png]]></image:loc>
-</image:image></url>
-<url>
-<loc>https://specmatic.io/</loc>
-<lastmod>2025-09-18T14:04:22+05:30</lastmod>
-<image:image>
-<image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Harness-API-Specifications-as-Executable-Contracts.png]]></image:loc>
 </image:image></url>
 <url>
 <loc>https://specmatic.io/apidays-india-2025/</loc>
