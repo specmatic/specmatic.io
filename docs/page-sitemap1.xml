@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
+<loc>https://specmatic.io/about-us/</loc>
+<lastmod>2025-10-03T19:13:35+05:30</lastmod></url>
+<url>
 <loc>https://specmatic.io/</loc>
 <lastmod>2025-10-01T18:39:41+05:30</lastmod>
 <image:image>
@@ -20,9 +23,6 @@
 <image:image>
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2022/12/winning-api-1-768x300.jpg]]></image:loc>
 </image:image></url>
-<url>
-<loc>https://specmatic.io/about-us/</loc>
-<lastmod>2025-09-30T16:57:45+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/roadmap/</loc>
 <lastmod>2025-09-22T10:21:37+05:30</lastmod>
