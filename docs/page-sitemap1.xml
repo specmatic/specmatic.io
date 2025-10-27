@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="https://specmatic.io/sitemaps_xsl.xsl"?><urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 <url>
 <loc>https://specmatic.io/</loc>
-<lastmod>2025-10-13T07:02:55+05:30</lastmod>
+<lastmod>2025-10-27T20:05:26+05:30</lastmod>
 <image:image>
 <image:loc><![CDATA[https://specmatic.io/wp-content/uploads/2025/07/Harness-API-Specifications-as-Executable-Contracts.png]]></image:loc>
 </image:image></url>
 <url>
 <loc>https://specmatic.io/apidays-india-2025/</loc>
-<lastmod>2025-10-13T06:56:20+05:30</lastmod></url>
+<lastmod>2025-10-27T19:02:54+05:30</lastmod></url>
 <url>
 <loc>https://specmatic.io/appearances/</loc>
 <lastmod>2025-10-10T13:31:52+05:30</lastmod>
