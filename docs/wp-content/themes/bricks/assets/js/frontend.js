@@ -595,6 +595,9 @@ const bricksUtils = {
 		// Check if the href has page query
 		if (url.searchParams.has('paged')) {
 			pageNumber = parseInt(url.searchParams.get('paged'))
+		} else if (href === window.bricksData?.baseUrl) {
+			// Example: Date archive page, 1st page is same as baseUrl (#86c4bj3zz @since 2.0.2)
+			pageNumber = 1
 		} else {
 			// Check if the href has page path
 			const pagePath = url.pathname.split('/')
@@ -1105,6 +1108,96 @@ class BricksFunction {
 				this.listenerHandler
 			)
 		}
+	}
+}
+
+/**
+ * Block Editor Integration: Simple re-initialization system
+ *
+ * @since 2.1
+ */
+
+// Simple function to re-run all registered BricksFunction instances
+function reinitBricksFunctions() {
+	if (window.bricksFunctionInstances) {
+		window.bricksFunctionInstances.forEach((instance) => {
+			if (instance && typeof instance.run === 'function') {
+				instance.run()
+			}
+		})
+	}
+}
+
+/**
+ * BricksFunction registration system for block editor compatibility
+ *
+ * @since 2.1
+ */
+if (typeof window !== 'undefined') {
+	// Store all BricksFunction instances for re-initialization
+	window.bricksFunctionInstances = window.bricksFunctionInstances || []
+
+	// Store the original BricksFunction class
+	const OriginalBricksFunction = BricksFunction
+
+	// Override BricksFunction constructor to register instances for block editor
+	window.BricksFunction = class extends OriginalBricksFunction {
+		constructor(options) {
+			super(options)
+
+			// Register this instance for block editor re-initialization
+			window.bricksFunctionInstances.push(this)
+		}
+	}
+
+	// Preserve the original class properties and methods
+	Object.setPrototypeOf(window.BricksFunction.prototype, OriginalBricksFunction.prototype)
+	Object.setPrototypeOf(window.BricksFunction, OriginalBricksFunction)
+
+	// Make the enhanced class globally available
+	if (typeof BricksFunction !== 'undefined') {
+		BricksFunction = window.BricksFunction
+	}
+}
+
+/**
+ * Block Editor Integration: MutationObserver on editor container
+ *
+ * @since 2.1
+ */
+function bricksBlockEditorIntegration() {
+	if (!document.body.classList.contains('block-editor-page')) {
+		return
+	}
+
+	const waitForEditor = () => {
+		const editorContainer = document.querySelector('.wp-block-post-content')
+
+		if (editorContainer) {
+			// Set up MutationObserver on the editor container
+			const observer = new MutationObserver(() => {
+				clearTimeout(window.bricksReinitTimeout)
+				window.bricksReinitTimeout = setTimeout(reinitBricksFunctions, 300)
+			})
+
+			observer.observe(editorContainer, {
+				childList: true,
+				subtree: true
+			})
+
+			// Also run once immediately
+			setTimeout(reinitBricksFunctions, 200)
+		} else {
+			// Retry if editor not ready yet
+			setTimeout(waitForEditor, 100)
+		}
+	}
+
+	// Start waiting for editor
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', waitForEditor)
+	} else {
+		waitForEditor()
 	}
 }
 
@@ -1727,6 +1820,13 @@ function bricksQueryLoadPage(el, noDelay = false, nonceRefreshed = false) {
 
 					// Update Page on query info
 					window.bricksData.queryLoopInstances[queryElementId].page = page
+
+					// Update queryLoopInstances.maxPages if updatedQuery.max_num_pages exists, sometimes it might be changed (@since 2.1)
+					if (updatedQuery?.max_num_pages !== undefined) {
+						window.bricksData.queryLoopInstances[queryElementId].maxPages = parseInt(
+							updatedQuery.max_num_pages
+						)
+					}
 				} else if (status === 403 && res?.code === 'rest_cookie_invalid_nonce' && !nonceRefreshed) {
 					// Nonce might be invalid, try to regenerate and retry
 					bricksRegenerateNonceAndRetryQueryLoadPage(el).then(resolve).catch(reject)
@@ -2220,7 +2320,7 @@ function bricksQueryPagination() {
 }
 
 function bricksStickyHeader() {
-	let stickyHeaderEl = document.querySelector('#brx-header.sticky')
+	let stickyHeaderEl = document.querySelector('#brx-header.brx-sticky')
 
 	if (!stickyHeaderEl) {
 		return
@@ -2584,8 +2684,211 @@ const bricksTabsFn = new BricksFunction({
 				title.setAttribute('tabindex', '-1')
 			}
 		})
+
+		// Accordion layout on mobile (@since 2.1)
+		bricksTabsAccordionLayoutOnMobile()
 	}
 })
+
+/**
+ * Tabs: Accordion layout on mobile
+ *
+ * @since 2.1
+ */
+function bricksTabsAccordionLayoutOnMobile() {
+	function attachEventsToTitles(titles, panes) {
+		titles.forEach((title, index) => {
+			// Create tab title click listener
+			title.addEventListener('click', () => {
+				titles.forEach((t, i) => {
+					// Add .brx-open to tab title
+					if (i === index) {
+						title.classList.add('brx-open')
+
+						// Update aria-expanded for accordion mode
+						if (title.classList.contains('accordion-title')) {
+							t.setAttribute('aria-expanded', 'true')
+						}
+					}
+
+					// Remove .brx-open from other title
+					else {
+						t.classList.remove('brx-open')
+
+						// Update aria-expanded for accordion mode
+						if (t.classList.contains('accordion-title')) {
+							t.setAttribute('aria-expanded', 'false')
+						}
+					}
+				})
+
+				panes.forEach((pane, i) => {
+					// Add .brx-open to tab content
+					if (i === index) {
+						pane.classList.add('brx-open')
+					}
+
+					// Remove .brx-open from other conten
+					else {
+						pane.classList.remove('brx-open')
+					}
+				})
+
+				// Add or remove URL hash (@since 1.8.6)
+				let anchorId = title?.id && !title.id.startsWith('brxe-') ? `#${title.id}` : ''
+				if (anchorId) {
+					history.pushState('', document.title, window.location.pathname + anchorId)
+				} else {
+					history.pushState('', document.title, window.location.pathname + window.location.search)
+				}
+			})
+
+			// Add keyboard open on click support for accordion mode
+			if (title.classList.contains('accordion-title')) {
+				title.addEventListener('keydown', (event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault()
+
+						// Use the same logic as click - close others, open current
+						titles.forEach((t, i) => {
+							if (i === index) {
+								t.classList.add('brx-open')
+								t.setAttribute('aria-expanded', 'true')
+							} else {
+								t.classList.remove('brx-open')
+								t.setAttribute('aria-expanded', 'false')
+							}
+						})
+
+						panes.forEach((pane, i) => {
+							if (i === index) {
+								pane.classList.add('brx-open')
+							} else {
+								pane.classList.remove('brx-open')
+							}
+						})
+					}
+				})
+			}
+		})
+	}
+
+	function detachEventsFromTitles(titles) {
+		titles.forEach((title) => {
+			// Remove all listeners by cloning the node
+			const newTitle = title.cloneNode(true)
+			title.parentNode.replaceChild(newTitle, title)
+		})
+	}
+
+	const tabElements = bricksQuerySelectorAll(document, '.brxe-tabs, .brxe-tabs-nested')
+
+	tabElements.forEach((tabElement) => {
+		const breakpoint = parseInt(tabElement.getAttribute('data-accordion-breakpoint'), 10)
+		const tabMenu = tabElement.querySelector('.tab-menu')
+
+		// If accordion breakpoint is set and viewport is smaller than the breakpoint
+		if (breakpoint && window.innerWidth < breakpoint) {
+			// STEP: Mode: "Accordion"
+
+			// Hide the entire tab menu
+			if (tabMenu) {
+				tabMenu.style.display = 'none'
+			}
+
+			tabElement
+				.querySelectorAll('.tab-title:not([data-brx-tab-mode="accordion"])')
+				.forEach((el, index) => {
+					const accordionTitle = tabElement.querySelectorAll('[data-brx-tab-mode="accordion"]')[
+						index
+					]
+
+					// Check if title has been transferred
+					if (!el.hasAttribute('data-transferred')) {
+						const titleSpan = el.querySelector('span')
+						if (titleSpan) {
+							accordionTitle.insertBefore(titleSpan.cloneNode(true), accordionTitle.firstChild)
+							titleSpan.remove()
+
+							// Set .brx-open
+							if (el.classList.contains('brx-open')) {
+								accordionTitle.classList.add('brx-open')
+							} else {
+								accordionTitle.classList.remove('brx-open')
+							}
+						}
+
+						el.setAttribute('data-transferred', 'true')
+					}
+				})
+
+			tabElement
+				.querySelectorAll('[data-brx-tab-mode="accordion"]')
+				.forEach((el) => (el.style.display = 'block'))
+
+			// Remove tabindex from tab panels in accordion mode
+			tabElement.querySelectorAll('.tab-pane').forEach((pane) => {
+				pane.removeAttribute('tabindex')
+			})
+
+			// Attach events to accordion titles
+			const accordionTitles = tabElement.querySelectorAll('[data-brx-tab-mode="accordion"]')
+			const firstPane = tabElement.querySelector('.tab-pane')
+			const panes = firstPane
+				? Array.from(firstPane.parentNode.children).filter((el) =>
+						el.classList.contains('tab-pane')
+					)
+				: []
+			attachEventsToTitles(accordionTitles, panes)
+		} else {
+			// STEP: Mode "Tabs"
+
+			// Revert the tab menu to its original display value
+			if (tabMenu) {
+				tabMenu.style.display = ''
+			}
+
+			tabElement.querySelectorAll('[data-brx-tab-mode="accordion"]').forEach((el, index) => {
+				const tabTitle = tabElement.querySelectorAll(
+					'.tab-title:not([data-brx-tab-mode="accordion"])'
+				)[index]
+
+				// Check if title needs to be reverted
+				if (tabTitle.hasAttribute('data-transferred')) {
+					const titleSpan = el.querySelector('span')
+					if (titleSpan) {
+						tabTitle.insertBefore(titleSpan.cloneNode(true), tabTitle.firstChild)
+						titleSpan.remove()
+
+						// Set .brx-open
+						if (el.classList.contains('brx-open')) {
+							tabTitle.classList.add('brx-open')
+						} else {
+							tabTitle.classList.remove('brx-open')
+						}
+					}
+
+					tabTitle.removeAttribute('data-transferred')
+				}
+
+				tabTitle.style.display = 'block'
+			})
+
+			tabElement
+				.querySelectorAll('[data-brx-tab-mode="accordion"]')
+				.forEach((el) => (el.style.display = 'none'))
+
+			// Restore tabindex to tab panels in tabs mode (e.g. after window resize from accordion mode to tabs mode)
+			tabElement.querySelectorAll('.tab-pane').forEach((pane) => {
+				pane.setAttribute('tabindex', '0')
+			})
+
+			// Detach events from accordion titles only
+			const accordionTitles = tabElement.querySelectorAll('[data-brx-tab-mode="accordion"]')
+			detachEventsFromTitles(accordionTitles)
+		}
+	})
+}
 
 function bricksTabs() {
 	bricksTabsFn.run()
@@ -3484,6 +3787,7 @@ const bricksPhotoswipeFn = new BricksFunction({
 			let width = lightboxElement.getAttribute('data-pswp-width')
 			let height = lightboxElement.getAttribute('data-pswp-height')
 			let controls = lightboxElement.getAttribute('data-no-controls') == 1 ? 0 : 1
+			const muted = lightboxElement.getAttribute('data-muted') == 1 ? true : false // @since 2.1
 
 			// width in '%' or 'vh'
 			if (width && (width.includes('%') || width.includes('vw'))) {
@@ -3506,7 +3810,7 @@ const bricksPhotoswipeFn = new BricksFunction({
 			}
 
 			if (!photoswipeInitialised && videoUrl) {
-				let html = bricksGetLightboxVideoNode(videoUrl, controls)
+				let html = bricksGetLightboxVideoNode(videoUrl, controls, muted)
 
 				e.itemData = {
 					html: html.outerHTML, // Convert DOM node to HTML string
@@ -3597,13 +3901,14 @@ function bricksPhotoswipe() {
  *
  * @param {string} videoUrl
  * @param {boolean} controls @since 1.10.3
+ * @param {boolean} muted @since 2.1
  *
  * @returns iframe or video DOM node
  *
  * @since 1.7.2
  * @since 2.0: Change the way we parse YouTube video, to also support live and shorts videos.
  */
-function bricksGetLightboxVideoNode(videoUrl, controls) {
+function bricksGetLightboxVideoNode(videoUrl, controls, muted) {
 	if (videoUrl) {
 		hasContent = true
 
@@ -3616,30 +3921,38 @@ function bricksGetLightboxVideoNode(videoUrl, controls) {
 			videoUrl = videoData.url
 
 			if (videoData.id) {
-				// Add parameters
-				videoUrl += '?autoplay=1'
+				// Add parameters (check if URL already has parameters from bricksGetYouTubeVideoLinkData) (@since 2.x)
+				const separator = videoUrl.indexOf('?') !== -1 ? '&' : '?'
+				videoUrl += separator + 'autoplay=1'
 				videoUrl += '&rel=0'
 
 				// Hide YouTube controls
 				if (!controls) {
 					videoUrl += '&controls=0'
 				}
+
+				// Mute video (YouTube only supports muted autoplay on iOS Safari)
+				if (muted) {
+					videoUrl += '&mute=1'
+				}
 			}
 		}
-
 		if (videoUrl.indexOf('vimeo.com') !== -1) {
 			isIframe = true
 
-			// Transform Vimeo video URL into valid embed URL
-			if (videoUrl.indexOf('player.vimeo.com/video') === -1) {
-				videoUrl = videoUrl.replace('vimeo.com', 'player.vimeo.com/video')
-			}
+			// Skip URL transformation and parameter addition for direct video file links (as additional parameters will not work)
+			if (videoUrl.indexOf('/progressive_redirect/') === -1) {
+				// Transform Vimeo video URL into valid embed URL
+				if (videoUrl.indexOf('player.vimeo.com/video') === -1) {
+					videoUrl = videoUrl.replace('vimeo.com', 'player.vimeo.com/video')
+				}
 
-			videoUrl += '?autoplay=1'
+				videoUrl += '?autoplay=1'
 
-			// Hide Vimeo controls
-			if (!controls) {
-				videoUrl += '&controls=0'
+				// Hide Vimeo controls
+				if (!controls) {
+					videoUrl += '&controls=0'
+				}
 			}
 		}
 
@@ -3879,7 +4192,8 @@ const bricksAccordionFn = new BricksFunction({
 
 				// No independent toggle: slideUp .open item (if it's currently not open)
 				if (!independentToggle) {
-					let openItems = accordion.querySelectorAll('.brx-open')
+					// Select only direct children items, not nested accordion items (@since 2.x)
+					let openItems = accordion.querySelectorAll(':scope > .brx-open')
 
 					if (openItems.length) {
 						openItems.forEach((openItem) => {
@@ -3987,6 +4301,13 @@ const bricksAnimatedTypingFn = new BricksFunction({
 
 		if (Array.isArray(scriptArgs.strings) && !scriptArgs.strings.toString()) {
 			return
+		}
+
+		// Replace all content in strings to HTML entities so the animation can play smoothly (@since 2.1)
+		if (Array.isArray(scriptArgs.strings)) {
+			scriptArgs.strings = scriptArgs.strings.map((str) => {
+				return str.replace(/&/g, '&amp;')
+			})
 		}
 
 		window.bricksData.animatedTypingInstances[scriptId] = new Typed(typedElement, scriptArgs)
@@ -4689,6 +5010,320 @@ const bricksFormFn = new BricksFunction({
 		})
 
 		/**
+		 * Field type: image & gallery
+		 *
+		 * Listen to click event to open media library & store selected image(s) in adjacent hidden input field.
+		 *
+		 * @since 2.1
+		 */
+
+		/**
+		 * Helper function: Initialize drag and drop for gallery image sorting
+		 *
+		 * @param {HTMLElement} element - The draggable image preview element
+		 * @param {HTMLElement} container - The gallery preview container
+		 */
+		function initializeDragAndDrop(element, container) {
+			element.addEventListener('dragstart', (e) => {
+				element.classList.add('dragging')
+				element.style.opacity = '0.5'
+				e.dataTransfer.effectAllowed = 'move'
+				e.dataTransfer.setData('text/html', element.innerHTML)
+			})
+
+			element.addEventListener('dragend', (e) => {
+				element.style.opacity = '1'
+				element.classList.remove('dragging')
+
+				// Update hidden input with new order
+				updateGalleryOrder(container)
+			})
+
+			element.addEventListener('dragover', (e) => {
+				e.preventDefault()
+				e.dataTransfer.dropEffect = 'move'
+
+				const draggingElement = container.querySelector('.dragging')
+				if (draggingElement && draggingElement !== element) {
+					const allPreviews = Array.from(container.querySelectorAll('.image-preview'))
+					const draggedIndex = allPreviews.indexOf(draggingElement)
+					const targetIndex = allPreviews.indexOf(element)
+
+					if (draggedIndex < targetIndex) {
+						container.insertBefore(draggingElement, element.nextSibling)
+					} else {
+						container.insertBefore(draggingElement, element)
+					}
+				}
+			})
+
+			element.addEventListener('drop', (e) => {
+				e.preventDefault()
+				e.stopPropagation()
+			})
+		} /**
+		 * Helper function: Update hidden input with current gallery image order
+		 *
+		 * @param {HTMLElement} container - The gallery preview container
+		 */
+		function updateGalleryOrder(container) {
+			const hiddenInput = container.parentNode.querySelector('input[type="hidden"]')
+			if (!hiddenInput) return
+
+			const imagePreviews = container.querySelectorAll('.image-preview')
+			const imageIds = []
+
+			imagePreviews.forEach((preview) => {
+				const img = preview.querySelector('img')
+				if (img && img.dataset.attachmentId) {
+					imageIds.push(img.dataset.attachmentId)
+				}
+			})
+
+			hiddenInput.value = imageIds.join(',')
+		}
+
+		/**
+		 * Helper function: Create image preview HTML with remove button
+		 *
+		 * @param {object} attachment - Attachment object from WordPress media library
+		 * @param {HTMLElement} container - Container element (image-preview or gallery-preview)
+		 * @returns {HTMLElement} - Image preview wrapper element
+		 */
+		function createImagePreviewWithRemove(attachment, container) {
+			const previewWrapper = document.createElement('div')
+			previewWrapper.classList.add('image-preview')
+
+			// Make gallery items draggable for sorting
+			const isGallery = container.classList.contains('gallery-preview')
+			if (isGallery) {
+				previewWrapper.setAttribute('draggable', 'true')
+				previewWrapper.style.cursor = 'move'
+			}
+
+			// Create image element
+			const img = document.createElement('img')
+			img.src = attachment.url
+			img.alt = attachment.alt || ''
+			img.title = attachment.title || ''
+			img.style = 'max-height: 150px'
+			img.dataset.attachmentId = attachment.id
+
+			// Create remove button
+			const removeButton = document.createElement('button')
+			removeButton.type = 'button'
+			removeButton.classList.add('choose-files', 'remove')
+			removeButton.dataset.action = 'media-library'
+			removeButton.dataset.attachmentId = attachment.id
+			removeButton.textContent = window.bricksData.i18n.remove
+
+			// Add remove button listener
+			addImageRemoveListener(removeButton, container)
+
+			previewWrapper.appendChild(img)
+			previewWrapper.appendChild(removeButton)
+
+			// Add drag and drop event listeners for gallery sorting
+			if (isGallery) {
+				initializeDragAndDrop(previewWrapper, container)
+			}
+
+			return previewWrapper
+		}
+
+		/**
+		 * Helper function: Add event listener to image remove button
+		 *
+		 * @param {HTMLElement} removeButton - Remove button element
+		 * @param {HTMLElement} container - Container element (image-preview or gallery-preview)
+		 */
+		function addImageRemoveListener(removeButton, container) {
+			removeButton.addEventListener('click', (event) => {
+				event.preventDefault()
+
+				const attachmentId = removeButton.dataset.attachmentId
+				const previewWrapper = removeButton.closest('.image-preview')
+				const isGallery = container.classList.contains('gallery-preview')
+
+				// Get hidden input field
+				let hiddenInput
+				if (isGallery) {
+					hiddenInput = container.parentNode.querySelector('input[type="hidden"]')
+				} else {
+					hiddenInput = previewWrapper.parentNode.querySelector('input[type="hidden"]')
+				}
+
+				if (isGallery && hiddenInput) {
+					// Gallery: Remove specific attachment ID from comma-separated list
+					let currentValue = hiddenInput.value
+					let imageIds = currentValue ? currentValue.split(',').map((id) => id.trim()) : []
+					imageIds = imageIds.filter((id) => id !== attachmentId)
+					hiddenInput.value = imageIds.join(',')
+				} else if (hiddenInput) {
+					// Single image: Clear the hidden input value
+					hiddenInput.value = ''
+				}
+
+				// Remove the preview wrapper from DOM
+				if (previewWrapper) {
+					previewWrapper.remove()
+				}
+			})
+		}
+
+		/**
+		 * Helper function: Handle media library selection for image/gallery fields
+		 *
+		 * @param {HTMLElement} imageField - The button that opens the media library
+		 * @param {object} frame - WordPress media frame object
+		 * @param {boolean} isGallery - Whether this is a gallery field
+		 */
+		function handleMediaSelection(imageField, frame, isGallery) {
+			frame.on('select', function () {
+				const selection = frame.state().get('selection')
+				const attachments = selection.map((attachment) => attachment.toJSON())
+
+				if (isGallery) {
+					// Gallery: Handle multiple images
+					const galleryPreview = imageField.parentNode.querySelector('.gallery-preview')
+					const hiddenInput = imageField.parentNode.querySelector('input[type="hidden"]')
+
+					if (!galleryPreview) return
+
+					// Delete all existing .image-preview elements
+					const existingPreviews = galleryPreview.querySelectorAll('.image-preview')
+					existingPreviews.forEach((preview) => preview.remove())
+
+					// Collect new image IDs
+					const newIds = []
+
+					// Add each selected attachment
+					attachments.forEach((attachment) => {
+						// Create and append preview
+						const previewElement = createImagePreviewWithRemove(
+							{
+								...attachment,
+								url: attachment.sizes?.thumbnail?.url || attachment.url
+							},
+							galleryPreview
+						)
+						galleryPreview.appendChild(previewElement)
+
+						// Add to IDs array
+						newIds.push(String(attachment.id))
+					})
+
+					// Update hidden input with comma-separated IDs
+					if (hiddenInput) {
+						hiddenInput.value = newIds.join(',')
+					}
+				} else {
+					// Single image: Handle one image
+					const imagePreview = imageField.parentNode.querySelector('.image-preview')
+					const hiddenInput = imageField.parentNode.querySelector('input[type="hidden"]')
+
+					if (!attachments[0]) return
+
+					const attachment = attachments[0]
+
+					if (imagePreview) {
+						// Remove existing preview
+						const existingPreview = imagePreview.querySelector('img')
+						if (existingPreview) {
+							existingPreview.remove()
+						}
+
+						// Create and append new image
+						const img = document.createElement('img')
+						img.src = attachment.url
+						img.alt = attachment.alt || ''
+						img.title = attachment.title || ''
+						img.style = 'max-height: 150px'
+
+						imagePreview.insertBefore(img, imagePreview.firstChild)
+					}
+
+					// Update hidden input with attachment ID
+					if (hiddenInput) {
+						hiddenInput.value = attachment.id
+					}
+				}
+			})
+		}
+
+		// Initialize image and gallery field click handlers
+		let imageFields = bricksQuerySelectorAll(form, '.choose-files.image')
+		imageFields.forEach((imageField) => {
+			imageField.addEventListener('click', (event) => {
+				event.preventDefault()
+
+				const isGallery = imageField.classList.contains('multiple')
+
+				// Open the WordPress media modal for images
+				let frame = window.wp.media({
+					multiple: isGallery,
+					library: {
+						type: 'image'
+					}
+				})
+
+				// Handle media selection
+				handleMediaSelection(imageField, frame, isGallery)
+
+				// Check if there are pre-populated image IDs and select them in the media library
+				const hiddenInput = imageField.parentNode.querySelector('input[type="hidden"]')
+				if (hiddenInput && hiddenInput.value) {
+					const imageIds = hiddenInput.value.split(',').map((id) => id.trim())
+
+					// Create selection from existing IDs when frame is ready
+					if (imageIds.length > 0) {
+						frame.on('open', function () {
+							const selection = frame.state().get('selection')
+
+							imageIds.forEach((imageId) => {
+								const attachment = wp.media.attachment(imageId)
+								attachment.fetch()
+								selection.add(attachment)
+							})
+						})
+					}
+				}
+
+				frame.open()
+			})
+		})
+
+		// Initialize existing remove buttons (for pre-populated images)
+		let existingRemoveButtons = bricksQuerySelectorAll(form, '.choose-files.remove')
+		existingRemoveButtons.forEach((removeButton) => {
+			const container =
+				removeButton.closest('.gallery-preview') || removeButton.closest('.image-preview')
+			if (container) {
+				// Set attachment ID from existing image if not already set
+				if (!removeButton.dataset.attachmentId) {
+					const img = removeButton.parentNode.querySelector('img')
+					if (img && img.dataset.attachmentId) {
+						removeButton.dataset.attachmentId = img.dataset.attachmentId
+					}
+				}
+				addImageRemoveListener(removeButton, container)
+			}
+		})
+
+		// Initialize drag and drop for existing gallery images
+		let existingGalleryPreviews = bricksQuerySelectorAll(form, '.gallery-preview')
+		existingGalleryPreviews.forEach((galleryContainer) => {
+			const imagePreviews = galleryContainer.querySelectorAll('.image-preview')
+			imagePreviews.forEach((preview) => {
+				// Make draggable
+				preview.setAttribute('draggable', 'true')
+				preview.style.cursor = 'move'
+				// Initialize drag and drop handlers
+				initializeDragAndDrop(preview, galleryContainer)
+			})
+		})
+
+		/**
 		 * Listen to field blur/input events to validate form fields
 		 *
 		 * If field has data-error-message attribute, add event listener.
@@ -4943,6 +5578,16 @@ const bricksFormFn = new BricksFunction({
 							}
 
 							resultEl.remove()
+
+							// Remove "fileName" form input.files array as well (@since 2.0.2)
+							const newFileList = new DataTransfer()
+							for (let i = 0; i < input.files.length; i++) {
+								const inputFile = input.files[i]
+								if (inputFile.name !== fileName) {
+									newFileList.items.add(inputFile)
+								}
+							}
+							input.files = newFileList.files
 						})
 					}
 
@@ -5009,6 +5654,37 @@ const bricksFormFn = new BricksFunction({
 				return
 			}
 
+			// STEP: Turnstile (Cloudflare)
+			let turnstileElement = form.querySelector('.cf-turnstile')
+
+			if (turnstileElement && typeof window.turnstile !== 'undefined') {
+				// Get the widget ID from the iframe or element
+				let turnstileIframe = turnstileElement.querySelector('iframe')
+				let widgetId = turnstileIframe ? turnstileIframe.id : null
+
+				// Check if Turnstile has a response using the proper API
+				let turnstileResponse = widgetId ? turnstile.getResponse(widgetId) : null
+
+				// Check for the hidden input field
+				if (!turnstileResponse) {
+					let hiddenInput = turnstileElement.querySelector('input[name="cf-turnstile-response"]')
+					turnstileResponse = hiddenInput ? hiddenInput.value : null
+				}
+
+				// If no response token exists yet, wait for Turnstile to complete
+				if (!turnstileResponse) {
+					// Store form submission details for the callback
+					window.bricksPendingTurnstileSubmission = {
+						elementId: elementId,
+						form: form,
+						files: files
+					}
+
+					// Prevent form submission until Turnstile completes
+					return
+				}
+			}
+
 			// STEP: reCAPTCHA (Google)
 			let recaptchaElement = document.getElementById(`recaptcha-${elementId}`)
 			let recaptchaErrorEl = form.querySelector('.recaptcha-error')
@@ -5058,6 +5734,48 @@ function bricksForm() {
 	bricksFormFn.run()
 }
 
+/**
+ * Global Turnstile callback function
+ *
+ * Called by Turnstile when validation completes successfully.
+ * Proceeds with form submission if there's a pending submission.
+ *
+ * @since 1.9.2
+ */
+window.bricksTurnstileCallback = function (token) {
+	// Check if there's a pending form submission waiting for Turnstile
+	if (window.bricksPendingTurnstileSubmission) {
+		const submission = window.bricksPendingTurnstileSubmission
+
+		// Clear the pending submission
+		window.bricksPendingTurnstileSubmission = null
+
+		// Proceed with form submission now that Turnstile is complete
+		bricksSubmitForm(submission.elementId, submission.form, submission.files, null)
+	}
+}
+
+/**
+ * Global Turnstile error callback function
+ *
+ * Called by Turnstile when validation fails or encounters an error.
+ * Proceeds with form submission anyway to let backend handle the error.
+ *
+ * @since 1.9.2
+ */
+window.bricksTurnstileErrorCallback = function (error) {
+	// Check if there's a pending form submission waiting for Turnstile
+	if (window.bricksPendingTurnstileSubmission) {
+		const submission = window.bricksPendingTurnstileSubmission
+
+		// Clear the pending submission
+		window.bricksPendingTurnstileSubmission = null
+
+		// Proceed with form submission anyway (backend will handle validation failure)
+		bricksSubmitForm(submission.elementId, submission.form, submission.files, null)
+	}
+}
+
 function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed) {
 	// Is WordPress password form: Do a regular form submission (@since 1.11.1)
 	if (form.action && form.action.includes('action=postpass')) {
@@ -5065,8 +5783,15 @@ function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed
 		return
 	}
 
+	// Prevent multiple submits (@since 2.1)
+	if (form.dataset?.submitting === 'true') {
+		return
+	}
+
 	let submitButton = form.querySelector('button[type=submit]')
 	submitButton.classList.add('sending')
+	submitButton.disabled = true // Disable submit button while submitting
+	form.dataset.submitting = 'true' // Set submitting state (@since 2.1)
 
 	// Form inside loop: Get the post ID from the form (@since 1.11.1)
 	const loopId = form.dataset.loopObjectId ? form.dataset.loopObjectId : window.bricksData.postId
@@ -5079,6 +5804,12 @@ function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed
 	formData.append('recaptchaToken', recaptchaToken || '')
 	formData.append('nonce', window.bricksData.formNonce)
 	formData.append('referrer', location.toString())
+
+	// Submit component ID (@since 2.1)
+	const componentId = form.getAttribute('data-component-id') ?? false
+	if (componentId) {
+		formData.append('componentId', componentId)
+	}
 
 	// Get and parse notice data (@since 1.11.1)
 	const noticeData = JSON.parse(form.getAttribute('data-notice'))
@@ -5177,8 +5908,10 @@ function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed
 			window.dataLayer.push({ event: 'bricksNewsletterSignup' })
 		}
 
+		let allowResubmit = true // Allow resubmit by default (@since 2.1)
 		// Redirect after successful form submit
 		if (res.success && res.data?.redirectTo) {
+			allowResubmit = false
 			setTimeout(
 				() => {
 					window.location.href = res.data.redirectTo
@@ -5186,6 +5919,7 @@ function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed
 				parseInt(res.data?.redirectTimeout) || 0
 			)
 		} else if (res.success && res.data?.refreshPage) {
+			allowResubmit = false
 			// Refresh page after successful form submit (@since 1.11.1)
 			setTimeout(
 				() => {
@@ -5276,19 +6010,36 @@ function bricksSubmitForm(elementId, form, files, recaptchaToken, nonceRefreshed
 
 		submitButton.classList.remove('sending')
 
-		// Clear form data
+		// If allowResubmit, enable submit button and remove submitting state
+		if (allowResubmit) {
+			submitButton.disabled = false
+			form.dataset.submitting = 'false'
+		}
+
+		// Success handling
 		if (res.success) {
-			form.reset()
+			// Clear form data, if action is not 'updatePost' (@since 2.1)
+			if (res?.data?.reset != false) {
+				form.reset()
 
-			for (let inputName in files) {
-				delete files[inputName]
-			}
+				for (let inputName in files) {
+					delete files[inputName]
+				}
 
-			let fileResults = bricksQuerySelectorAll(form, '.file-result.show')
+				let fileResults = bricksQuerySelectorAll(form, '.file-result.show')
 
-			if (fileResults !== null) {
-				fileResults.forEach((resultEl) => {
-					resultEl.remove()
+				if (fileResults !== null) {
+					fileResults.forEach((resultEl) => {
+						resultEl.remove()
+					})
+				}
+
+				/**
+				 * Image: Remove all image previews
+				 */
+				let imagePreviewRemoveButtons = bricksQuerySelectorAll(form, '.image-preview .remove')
+				imagePreviewRemoveButtons.forEach((removeButton) => {
+					removeButton.click()
 				})
 			}
 
@@ -5351,6 +6102,66 @@ function bricksRegenerateNonceAndResubmit(elementId, form, files, recaptchaToken
 	}
 
 	xhrNonce.send('action=bricks_regenerate_form_nonce')
+}
+
+/**
+ * Form: Field type richtext (= TinyMCE editor)
+ *
+ * @since 2.1
+ */
+const bricksTinyMCEFn = new BricksFunction({
+	parentNode: document,
+	selector: '.brxe-form .form-field-richtext',
+	windowVariableCheck: ['tinymce'],
+	eachElement: (textareaElement) => {
+		// Retrieve the TinyMCE settings from the data attribute
+		let tinymceSettings = textareaElement.getAttribute('data-tinymce-settings')
+		tinymceSettings = tinymceSettings ? JSON.parse(tinymceSettings) : {}
+
+		const tinymce8 = window.tinymce8 || window.tinymce
+
+		// Initialize TinyMCE editor
+		tinymce8.init({
+			...tinymceSettings,
+			selector: `#${textareaElement.id}`,
+			suffix: '.min',
+			license_key: 'gpl', // https://www.tiny.cloud/docs/tinymce/latest/license-key/
+			setup: function (editor) {
+				// "Add media" button to open WP media modal
+				editor.ui.registry.addButton('bricks_add_media', {
+					text: 'Add Media',
+					icon: 'image',
+					onAction: function () {
+						// Open the WordPress media modal
+						let frame = window.wp.media({
+							title: 'Insert Media',
+							button: { text: 'Insert' },
+							multiple: false
+						})
+
+						frame.on('select', function () {
+							let attachment = frame.state().get('selection').first().toJSON()
+
+							// Insert into TinyMCE at cursor
+							editor.insertContent(
+								`<img src="${attachment.url}" alt="${attachment.alt}" title="${attachment.title}" />`
+							)
+						})
+
+						frame.open()
+					}
+				})
+
+				editor.on('change', function () {
+					editor.save()
+				})
+			}
+		})
+	}
+})
+
+function bricksTinyMCE() {
+	bricksTinyMCEFn.run()
 }
 
 /**
@@ -5487,6 +6298,7 @@ const bricksIsotopeFn = new BricksFunction({
 							opacity: 1,
 							transform: 'skew(0)'
 						}
+						break
 
 					default:
 						// 'scale' is isotopes default
@@ -5703,6 +6515,474 @@ function bricksIsotopeListeners() {
 	window.addEventListener('load', () => {
 		bricksIsotope()
 	})
+}
+
+/**
+ * Element: Map
+ *
+ * Init maps explicit on Google Maps callback.
+ */
+const bricksMapFn = new BricksFunction({
+	parentNode: document,
+	selector: '.brxe-map',
+	eachElement: (mapEl, index) => {
+		/**
+		 * Set 1000ms timeout to request next map (to avoid hitting query limits)
+		 *
+		 * https://developers.google.com/maps/premium/previous-licenses/articles/usage-limits)
+		 */
+		setTimeout(() => {
+			let settings = (() => {
+				let mapOptions = mapEl.dataset.bricksMapOptions
+
+				if (!mapOptions) {
+					return false
+				}
+
+				try {
+					return JSON.parse(mapOptions)
+				} catch (e) {
+					return false
+				}
+			})(mapEl)
+
+			if (!settings) {
+				return
+			}
+
+			let addresses = Array.isArray(settings?.addresses)
+				? settings.addresses
+				: [{ address: 'Berlin, Germany' }]
+			let markers = []
+			let markerDefault = {}
+
+			// Custom marker
+			if (settings?.marker) {
+				markerDefault.icon = {
+					url: settings.marker
+				}
+
+				if (settings?.markerHeight && settings?.markerWidth) {
+					markerDefault.icon.scaledSize = new google.maps.Size(
+						parseInt(settings.markerWidth),
+						parseInt(settings.markerHeight)
+					)
+				}
+			}
+
+			// Custom marker active
+			let markerActive = {}
+
+			if (settings?.markerActive) {
+				markerActive = {
+					url: settings.markerActive
+				}
+
+				if (settings?.markerActiveHeight && settings?.markerActiveWidth) {
+					markerActive.scaledSize = new google.maps.Size(
+						parseInt(settings.markerActiveWidth),
+						parseInt(settings.markerActiveHeight)
+					)
+				}
+			}
+
+			let infoBoxes = []
+			let bounds = new google.maps.LatLngBounds()
+
+			// 'gestureHandling' combines 'scrollwheel' and 'draggable' (which are deprecated)
+			let gestureHandling = 'auto'
+
+			if (!settings.draggable) {
+				gestureHandling = 'none'
+			} else if (settings.scrollwheel && settings.draggable) {
+				gestureHandling = 'cooperative'
+			} else if (!settings.scrollwheel && settings.draggable) {
+				gestureHandling = 'greedy'
+			}
+
+			if (settings.disableDefaultUI) {
+				settings.fullscreenControl = false
+				settings.mapTypeControl = false
+				settings.streetViewControl = false
+				settings.zoomControl = false
+			}
+
+			// https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
+			let zoom = settings.zoom ? parseInt(settings.zoom) : 12
+			let mapOptions = {
+				zoom: zoom,
+				// scrollwheel: settings.scrollwheel,
+				// draggable: settings.draggable,
+				gestureHandling: gestureHandling,
+				fullscreenControl: settings.fullscreenControl,
+				mapTypeControl: settings.mapTypeControl,
+				streetViewControl: settings.streetViewControl,
+				zoomControl: settings.zoomControl,
+				disableDefaultUI: settings.disableDefaultUI
+			}
+
+			// Set map style
+			if (settings?.styles) {
+				try {
+					mapOptions.styles = JSON.parse(settings.styles)
+				} catch (e) {
+					console.warn('Error parsing map styles:', e)
+				}
+			}
+
+			if (settings.zoomControl) {
+				if (settings?.maxZoom) {
+					mapOptions.maxZoom = parseInt(settings.maxZoom)
+				}
+
+				if (settings?.minZoom) {
+					mapOptions.minZoom = parseInt(settings.minZoom)
+				}
+			}
+
+			let map = new google.maps.Map(mapEl, mapOptions)
+
+			// Loop through all addresses to set markers, infoBoxes, bounds etc.
+			for (let i = 0; i < addresses.length; i++) {
+				let addressObj = addresses[i]
+
+				// Render marker with Latitude/Longitude
+				if (addressObj?.latitude && addressObj?.longitude) {
+					renderMapMarker(addressObj, {
+						lat: parseFloat(addressObj.latitude),
+						lng: parseFloat(addressObj.longitude)
+					})
+				}
+				// Run Geocoding function to convert address into coordinates (use closure to pass additional variables)
+				else if (addressObj?.address) {
+					let geocoder = new google.maps.Geocoder()
+
+					geocoder.geocode({ address: addressObj.address }, geocodeCallback(addressObj))
+				}
+			}
+
+			function geocodeCallback(addressObj) {
+				let geocodeCallback = (results, status) => {
+					// Skip geocode response on error
+					if (status !== 'OK') {
+						console.warn('Geocode error:', status)
+						return
+					}
+
+					let position = results[0].geometry.location
+					renderMapMarker(addressObj, position)
+				}
+
+				return geocodeCallback
+			}
+
+			function renderMapMarker(addressObj, position) {
+				markerDefault.map = map
+				markerDefault.position = position
+
+				let marker = new google.maps.Marker(markerDefault)
+				marker.setMap(map)
+				markers.push(marker)
+
+				google.maps.event.addListener(marker, 'click', () => {
+					onMarkerClick(addressObj)
+				})
+
+				function onMarkerClick(addressObj) {
+					// First close all markers and infoBoxes
+					if (markerDefault?.icon) {
+						markers.forEach((marker) => {
+							marker.setIcon(markerDefault.icon)
+						})
+					}
+
+					infoBoxes.forEach((infoBox) => {
+						infoBox.hide()
+					})
+
+					// Set custom active marker on marker click
+					if (markerActive?.url) {
+						marker.setIcon(markerActive)
+					}
+
+					// Open infoBox (better styleable than infoWindow) on marker click
+					// http://htmlpreview.github.io/?http://github.com/googlemaps/v3-utility-library/blob/master/infobox/docs/reference.html
+					let infoboxContent = ''
+					let infoTitle = addressObj?.infoTitle || false
+					let infoSubtitle = addressObj?.infoSubtitle || false
+					let infoOpeningHours = addressObj?.infoOpeningHours || false
+					let infoImages = addressObj?.infoImages || {}
+
+					if (!Array.isArray(infoImages)) {
+						infoImages = Array.isArray(infoImages?.images) ? infoImages.images : []
+					}
+
+					if (infoTitle) {
+						infoboxContent += `<h3 class="title">${infoTitle}</h3>`
+					}
+
+					if (infoSubtitle) {
+						infoboxContent += `<p class="subtitle">${infoSubtitle}</p>`
+					}
+
+					if (infoOpeningHours) {
+						infoboxContent += '<ul class="content">'
+						infoOpeningHours = infoOpeningHours.split('\n')
+
+						if (infoOpeningHours.length) {
+							infoOpeningHours.forEach((infoOpeningHour) => {
+								infoboxContent += `<li>${infoOpeningHour}</li>`
+							})
+						}
+
+						infoboxContent += '</ul>'
+					}
+
+					if (infoImages.length) {
+						infoboxContent += '<ul class="images bricks-lightbox">'
+
+						infoImages.forEach((image) => {
+							infoboxContent += '<li>'
+
+							if (image.thumbnail && image.src) {
+								infoboxContent += `<a
+									data-pswp-src="${image.src}"
+									data-pswp-width="${image?.width || 376}"
+									data-pswp-height="${image?.height || 376}"
+									data-pswp-id="${addressObj.id}">`
+								infoboxContent += `<img src="${image.thumbnail}"/>`
+								infoboxContent += '</a>'
+							}
+
+							infoboxContent += '</li>'
+						})
+
+						infoboxContent += '</ul>'
+					}
+
+					if (infoboxContent) {
+						let infoBoxWidth = parseInt(addressObj?.infoWidth) || 300
+						let infoBoxOptions = {
+							// minWidth: infoBoxWidth,
+							// maxWidth: infoBoxWidth,
+							content: infoboxContent,
+							disableAutoPan: true,
+							pixelOffset: new google.maps.Size(0, 0),
+							alignBottom: false,
+							infoBoxClearance: new google.maps.Size(20, 20),
+							enableEventPropagation: false,
+							zIndex: 1001,
+							boxStyle: {
+								opacity: 1,
+								zIndex: 999,
+								top: 0,
+								left: 0,
+								width: `${infoBoxWidth}px`
+							}
+						}
+
+						if (typeof window.jQuery != 'undefined') {
+							infoBoxOptions.closeBoxURL = ''
+							infoBoxOptions.content += '<span class="close">×</span>'
+						}
+
+						let infoBox = new InfoBox(infoBoxOptions)
+
+						infoBox.open(map, marker)
+						infoBoxes.push(infoBox)
+
+						// Center infoBox on map (small timeout required to allow infoBox to render)
+						setTimeout(() => {
+							let infoBoxHeight = infoBox.div_.offsetHeight
+							let projectedPosition = map.getProjection().fromLatLngToPoint(marker.getPosition())
+							let infoBoxCenter = map
+								.getProjection()
+								.fromPointToLatLng(
+									new google.maps.Point(
+										projectedPosition.x,
+										projectedPosition.y - (infoBoxHeight * getLongitudePerPixel()) / 2
+									)
+								)
+							map.panTo(infoBoxCenter)
+						}, 100)
+
+						google.maps.event.addListener(infoBox, 'domready', (e) => {
+							if (infoImages.length) {
+								bricksPhotoswipe()
+							}
+
+							// Close infoBox icon listener
+							if (typeof window.jQuery != 'undefined') {
+								jQuery('.close').on('click', () => {
+									infoBox.close()
+
+									if (markerDefault?.icon) {
+										marker.setIcon(markerDefault.icon)
+									}
+
+									if (addresses.length > 1) {
+										bounds.extend(position)
+										map.fitBounds(bounds)
+										map.panToBounds(bounds)
+									}
+								})
+							}
+						})
+					}
+				}
+
+				// Get longitude per pixel based on current Zoom (for infoBox centering)
+				function getLongitudePerPixel() {
+					let latLng = map.getCenter()
+					let zoom = map.getZoom()
+					let pixelDistance = 1
+					let point1 = map
+						.getProjection()
+						.fromLatLngToPoint(
+							new google.maps.LatLng(
+								latLng.lat() - pixelDistance / Math.pow(2, zoom),
+								latLng.lng() - pixelDistance / Math.pow(2, zoom)
+							)
+						)
+					let point2 = map
+						.getProjection()
+						.fromLatLngToPoint(
+							new google.maps.LatLng(
+								latLng.lat() + pixelDistance / Math.pow(2, zoom),
+								latLng.lng() + pixelDistance / Math.pow(2, zoom)
+							)
+						)
+					return Math.abs(point2.x - point1.x)
+				}
+
+				bounds.extend(position)
+				map.fitBounds(bounds)
+				map.panToBounds(bounds)
+
+				// let mapPosition = marker.getPosition()
+				// map.setCenter(mapPosition)
+
+				// Set zoom once map is idle: As fitBounds overrules zoom (since 1.5.1)
+				if (addresses.length === 1) {
+					let mapIdleListener = google.maps.event.addListener(map, 'idle', () => {
+						map.setZoom(zoom)
+						google.maps.event.removeListener(mapIdleListener)
+					})
+				}
+			}
+
+			// Set map type
+			if (settings?.type) {
+				map.setMapTypeId(settings.type)
+			}
+		}, index * 1000)
+	}
+})
+
+function bricksMap() {
+	bricksMapFn.run()
+}
+
+/**
+ * Element: Map (Leaflet)
+ *
+ * Init Leaflet
+ *
+ * @since 2.1
+ */
+const bricksMapLeafletFn = new BricksFunction({
+	parentNode: document,
+	selector: '.brxe-map-leaflet',
+	eachElement: (mapEl, index) => {
+		const settings = JSON.parse(mapEl.dataset.mapOptions)
+
+		// Prepeares the base map layers, that we will append to map later
+		const prepareBaseMaps = () => {
+			const baseMaps = []
+
+			// Loop trough all base layers
+			settings.layers.forEach((layer) => {
+				const { name: layerName, url: layerUrl, ...layerOptions } = layer
+
+				// Create new layers (L.tileLayer)
+				baseMaps[layerName] = L.tileLayer(layerUrl, layerOptions)
+			})
+
+			return baseMaps
+		}
+
+		// Add all markers to the map, directly. "map" should be available in the scope
+		const prepareMarkers = () => {
+			// Loop through all addresses to set markers, infoBoxes, bounds etc.
+			for (let i = 0; i < settings.markers.length; i++) {
+				let options = settings.markers[i]
+
+				const markerOptions = {}
+
+				// Add custom marker icon
+				if (options.icon) {
+					markerOptions.icon = L.icon(options.icon)
+				}
+
+				// Add marker to map (important: We directly add to the map element)
+				const m = L.marker([options.lat, options.lng], markerOptions).addTo(map)
+
+				// Add popup to marker (if popupText is set)
+				if (options.popupText) {
+					m.bindPopup(options.popupText)
+				}
+			}
+		}
+
+		// Layers
+		const baseMaps = prepareBaseMaps()
+		const baseMapsLayers = Object.values(baseMaps)
+
+		// Always set first layer as a default (directly via map settings)
+		if (baseMapsLayers.length) {
+			settings.map['layers'] = baseMapsLayers[0]
+		}
+
+		// Init a map, pass settings to it
+		var map = L.map(mapEl, settings.map)
+
+		// Add baseMap layers (only if more than one, so that we don't have "Layer" control with only one layer)
+		if (baseMapsLayers.length > 1) {
+			L.control.layers(baseMaps).addTo(map)
+		}
+
+		prepareMarkers()
+	}
+})
+
+function bricksMapLeaflet() {
+	// Only run when "name" function/variable is available (@since 2.1)
+	const whenAvailable = (name, callback, timeout = 500) => {
+		// Store the interval id
+		var intervalId = window.setInterval(function () {
+			if (window[name]) {
+				// Clear the interval id
+				window.clearInterval(intervalId)
+				// Call back
+				callback(window[name])
+			}
+		}, timeout)
+	}
+
+	// We need to use whenAvailable to ensure that the Leaflet library is loaded,
+	// but only if there is a Leaflet map on the page (.brxe-map-leaflet class)
+	if (document.querySelector('.brxe-map-leaflet')) {
+		whenAvailable('L', () => {
+			// Timeout in builder
+			setTimeout(
+				() => {
+					bricksMapLeafletFn.run()
+				},
+				bricksIsFrontend ? 0 : 1000 // If we are in a builder, wait 1 second before running the function
+			)
+		})
+	}
+	return
 }
 
 /**
@@ -7196,7 +8476,6 @@ function bricksInteractionCallbackExecution(sourceEl, config) {
 			}
 			break
 
-		// @since 1.9.2
 		case 'scrollTo':
 			const scrollTarget = target[0]
 
@@ -7268,6 +8547,17 @@ function bricksInteractionCallbackExecution(sourceEl, config) {
 			}
 
 			break
+
+		// Click element (@since 2.x)
+		case 'click':
+			if (target && target.length) {
+				target.forEach((clickTarget) => {
+					clickTarget.click()
+				})
+			}
+
+			break
+
 		case 'storageAdd':
 		case 'storageRemove':
 		case 'storageCount':
@@ -9708,10 +10998,11 @@ function bricksSubmenuPosition(timeout = 0) {
  * Handle submenu before position logic on window resize
  * - Save initial width and height by using requestAnimationFrame
  * - Only execute bricksSubmenuBeforePosition if actual resize is detected
+ * - DO NOT run this function multiple times
  * @since 2.0
  */
 function bricksSubmenuWindowResizeHandler() {
-	let lastWidth, lastHeight, submenuTimeout
+	let lastWidth, lastHeight, submenuTimeout, lastBodyWidth
 
 	/**
 	 * Remove .brx-submenu-positioned class from submenu elements to apply display:none while resizing
@@ -9736,13 +11027,18 @@ function bricksSubmenuWindowResizeHandler() {
 		})
 	}
 
-	// Resize event handler (Only execute logic on actual resize, ignore if only mobile address bar/height changes)
+	/**
+	 * Resize event handler
+	 * - Only execute if width actually changed (ignore height changes mobile address bar/height changes)
+	 * - Also trigger if body width changed (e.g. no-scroll classe on body) (@since 2.1)
+	 */
 	const handleResize = () => {
 		const currentWidth = window.innerWidth
 		const currentHeight = window.innerHeight
+		const currentBodyWidth = document.body.clientWidth // (@since 2.1)
 
 		// Only recalculate if width changes
-		if (currentWidth === lastWidth) {
+		if (currentWidth === lastWidth && currentBodyWidth === lastBodyWidth) {
 			return
 		}
 
@@ -9758,6 +11054,7 @@ function bricksSubmenuWindowResizeHandler() {
 		// Update stored dimensions
 		lastWidth = currentWidth
 		lastHeight = currentHeight
+		lastBodyWidth = currentBodyWidth
 	}
 
 	// Wait for stable viewport dimensions before starting to listen for resize events
@@ -9770,6 +11067,7 @@ function bricksSubmenuWindowResizeHandler() {
 				// Viewport is stable, set the initial dimensions
 				lastWidth = width
 				lastHeight = height
+				lastBodyWidth = document.body.clientWidth
 
 				// Start listening for actual resize events
 				window.addEventListener('resize', handleResize)
@@ -9782,6 +11080,22 @@ function bricksSubmenuWindowResizeHandler() {
 
 	// Initial check
 	waitForStableViewport()
+
+	// Body resize observer (in case body width changes without window resize, e.g. no-scroll class added to body) (@since 2.1)
+	if (window.bricksData && !window.bricksData.bodyResizeObserver) {
+		window.bricksData.bodyResizeObserver = new ResizeObserver((entries) => {
+			for (let entry of entries) {
+				const newBodyWidth = entry.contentRect.width
+
+				// Only trigger if body width actually changed
+				if (newBodyWidth !== lastBodyWidth) {
+					handleResize()
+				}
+			}
+		})
+
+		window.bricksData.bodyResizeObserver.observe(document.body)
+	}
 }
 
 /**
@@ -10710,7 +12024,26 @@ function bricksGetYouTubeVideoLinkData(url) {
 		const videoId = match[1]
 
 		// Create embed URL with video ID
-		const embedUrl = `https://www.youtube.com/embed/${videoId}`
+		let embedUrl = `https://www.youtube.com/embed/${videoId}`
+
+		// Preserve query parameters from the original URL (@since 2.x)
+		try {
+			const urlObj = new URL(url)
+			const params = new URLSearchParams(urlObj.search)
+
+			// Remove the 'v' parameter as it's already in the path
+			params.delete('v')
+
+			// If there are remaining parameters, append them to the embed URL
+			const paramString = params.toString()
+			if (paramString) {
+				embedUrl += '?' + paramString
+			}
+		} catch (e) {
+			// If URL parsing fails, continue without parameters
+			console.warn('Failed to parse URL parameters:', e)
+		}
+
 		return {
 			url: embedUrl,
 			id: videoId
@@ -10764,6 +12097,9 @@ let bricksTimeouts = {}
 document.addEventListener('DOMContentLoaded', (event) => {
 	bricksIsFrontend = document.body.classList.contains('bricks-is-frontend')
 
+	// Block Editor Integration: MutationObserver on editor container (@since 2.1.2)
+	bricksBlockEditorIntegration()
+
 	// Nav menu & Dropdown (@since 1.8)
 	bricksNavMenu()
 	bricksMultilevelMenu()
@@ -10781,6 +12117,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 	// Run after bricksSwiper() & bricksSplide() as those need to generate required duplicate nodes first
 	bricksPhotoswipe()
+
+	bricksTinyMCE()
 
 	bricksPrettify()
 	bricksAccordion()
@@ -10806,6 +12144,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	bricksBackgroundVideoInit()
 	bricksPostReadingTime()
 	bricksBackToTop() // @since 1.11
+	bricksMapLeaflet() // @since 2.1
 
 	bricksNavNested()
 	bricksOffcanvas()
@@ -10851,6 +12190,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 		// Re-calculate left position on window resize with debounce (@since 1.8) Moved to bricksSubmenuWindowResizeHandler()
 		// bricksTimeouts.bricksSubmenuPosition = setTimeout(bricksSubmenuPosition, 250)
+
+		// Tabs: Accordion at breakpoint (@since 2.1)
+		bricksTimeouts.tabsAdjustLayoutOnMobile = setTimeout(bricksTabsAccordionLayoutOnMobile, 250)
 
 		// Set mobile menu open toggle parent div display according to toggle display
 		bricksTimeouts.bricksToggleDisplay = setTimeout(bricksToggleDisplay, 100)

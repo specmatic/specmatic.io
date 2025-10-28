@@ -131,7 +131,7 @@ function handleEmptyContentCore(rootContainer) {
 	if (
 		rootContainer &&
 		!rootContainer.querySelector('.bricks-block-editor-notice-wrapper') &&
-		window.bricksData.showBuiltWithBricks == 1 &&
+		window.bricksData?.renderWithBricks == 1 &&
 		!window.useDefaultEditor // Only proceed if user hasn't chosen default editor
 	) {
 		// Hide existing appender block

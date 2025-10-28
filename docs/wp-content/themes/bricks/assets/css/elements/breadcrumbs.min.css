@@ -1,1 +1,1 @@
-.brxe-breadcrumbs{align-items:center;display:flex;flex-direction:row;flex-wrap:wrap;gap:10px}.brxe-breadcrumbs .separator{display:flex}
+.brxe-breadcrumbs{align-items:center;display:flex;flex-direction:row;flex-wrap:wrap;gap:10px}.brxe-breadcrumbs .separator{display:flex}.brxe-breadcrumbs .item:has(>svg,>i){align-items:center;display:flex}

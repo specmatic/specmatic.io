@@ -141,9 +141,10 @@ function bricksAdminImport() {
 }
 
 /**
- * Save license key
+ * Save & revalidate license key
  *
  * @since 1.0
+ * @since 2.x Re-validate license button added
  */
 
 function bricksAdminSaveLicenseKey() {
@@ -154,8 +155,9 @@ function bricksAdminSaveLicenseKey() {
 	}
 
 	var action = licenseKeyForm.action.value
-	var nonce = licenseKeyForm.nonce.value // @since 1.5.4
+	var nonce = licenseKeyForm.nonce.value
 	var submitButton = licenseKeyForm.querySelector('input[type=submit]')
+	var revalidateButton = document.getElementById('bricks-revalidate-license')
 
 	licenseKeyForm.addEventListener('submit', function (e) {
 		e.preventDefault()
@@ -195,6 +197,73 @@ function bricksAdminSaveLicenseKey() {
 			}
 		})
 	})
+
+	// Re-validate license button handler (@since 2.x)
+	if (revalidateButton) {
+		revalidateButton.addEventListener('click', function (e) {
+			e.preventDefault()
+
+			// Clear previous messages
+			var errorMessage = licenseKeyForm.querySelector('.error-message')
+			var successMessage = licenseKeyForm.querySelector('.success-message')
+
+			if (errorMessage) {
+				errorMessage.innerHTML = ''
+			}
+
+			if (successMessage) {
+				successMessage.innerHTML = ''
+			}
+
+			// Disable button during request
+			revalidateButton.disabled = true
+
+			var originalText = revalidateButton.value
+			revalidateButton.value = window.bricksData?.i18n?.validating
+
+			jQuery.ajax({
+				type: 'POST',
+				url: bricksData.ajaxUrl,
+				data: {
+					action: 'bricks_revalidate_license',
+					nonce: nonce
+				},
+				success: function (response) {
+					revalidateButton.disabled = false
+					revalidateButton.value = originalText
+
+					if (response.success) {
+						if (response.data.hasOwnProperty('message')) {
+							successMessage.innerHTML = response.data.message
+						}
+
+						// Update status display if status is returned
+						if (response.data.hasOwnProperty('status')) {
+							var statusSpan = licenseKeyForm.querySelector('.status-wrapper .status')
+							if (statusSpan) {
+								statusSpan.className = 'status ' + response.data.status
+								statusSpan.textContent = response.data.status.replace(/_/g, ' ')
+							}
+						}
+
+						// Reload page after 1.5 seconds to show updated status
+						setTimeout(() => {
+							location.reload()
+						}, 1500)
+					} else {
+						if (response.data.hasOwnProperty('message')) {
+							errorMessage.innerHTML = response.data.message
+						}
+					}
+				},
+				error: function (xhr, status, error) {
+					revalidateButton.disabled = false
+					revalidateButton.value = originalText
+					errorMessage.innerHTML = 'An error occurred while re-validating the license.'
+				}
+			})
+		})
+	}
 }
 
 /**
@@ -2074,7 +2143,7 @@ function bricksCreateMultiselect(selectId, options = {}) {
  *
  * @since 2.0
  */
-function bricksElementManger() {
+function bricksElementManager() {
 	let elementManagerForm = document.getElementById('bricks-element-manager')
 
 	if (!elementManagerForm) {
@@ -3103,6 +3172,41 @@ function bricksAdminMaintenanceExcludedPosts() {
 }
 
 /**
+ * User activation
+ *
+ * @since 2.1
+ */
+function bricksAdminUserActivation() {
+	// STEP: Get needed elements
+	const userActivationCheckbox = document.getElementById('userActivationEnabled')
+	const activationElements = document.querySelectorAll('[data-on="userActivationEnabled"]')
+
+	// STEP: Check if all required elements exist, otherwise return
+	if (!userActivationCheckbox || !activationElements.length) {
+		return
+	}
+
+	// General function to toggle visibility of elements
+	const toggle = function (elements, toggle) {
+		elements.forEach((element) => {
+			if (toggle) {
+				element.classList.remove('hide')
+			} else {
+				element.classList.add('hide')
+			}
+		})
+	}
+
+	// STEP: Toggle visibility of activation elements
+	toggle(activationElements, userActivationCheckbox.checked)
+
+	// STEP: Add event listeners
+	userActivationCheckbox.addEventListener('change', function (e) {
+		toggle(activationElements, e.target.checked)
+	})
+}
+
+/**
  * Handle attribute & term image swatch uploads
  *
  * @since 2.0
@@ -3559,8 +3663,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
 	bricksAdminTemplateExclusion()
 	bricksAdminMaintenanceExcludedPosts()
 
-	bricksElementManger()
+	bricksAdminUserActivation()
 	bricksAdminElementManagerUsage()
+	bricksElementManager()
 
 	bricksAttributeImageSwatches()
 	bricksAttributeColorSwatches()

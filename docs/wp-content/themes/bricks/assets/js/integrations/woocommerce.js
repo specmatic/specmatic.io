@@ -16,7 +16,7 @@ function bricksShowNotice(message) {
 
 function bricksScrollToNotices() {
 	// Include Bricks WC notice wrapper
-	const scrollElement = jQuery(
+	let scrollElement = jQuery(
 		'.woocommerce-NoticeGroup-updateOrderReview, .woocommerce-NoticeGroup-checkout, .brxe-woocommerce-notice'
 	)
 
@@ -278,6 +278,63 @@ function bricksWooStarRating() {
 			)
 		}
 	})
+}
+
+/**
+ * Product reviews: Manage star rating fill states
+ *
+ * @since 2.1
+ */
+const bricksWooStarRatingManageFillFn = new BricksFunction({
+	parentNode: document,
+	selector: '.brxe-product-reviews',
+	eachElement: (reviewsContainer) => {
+		const tryFindStars = (attempt = 1) => {
+			const $starsContainer = jQuery(reviewsContainer).find('form .stars')
+
+			if ($starsContainer.length === 0 && attempt < 5) {
+				setTimeout(() => tryFindStars(attempt + 1), 500)
+				return
+			}
+
+			$starsContainer.each(function () {
+				const $stars = jQuery(this)
+				const stars = $stars.find('a')
+
+				const updateFilledStars = (activeIndex) => {
+					stars.each(function (index) {
+						if (index <= activeIndex) {
+							jQuery(this).addClass('bricks-star-filled')
+						} else {
+							jQuery(this).removeClass('bricks-star-filled')
+						}
+					})
+				}
+
+				stars.on('click', function () {
+					updateFilledStars(stars.index(this))
+				})
+
+				// Initialize
+				const activeIndex = stars.index(stars.filter('.active'))
+				if (activeIndex >= 0) {
+					updateFilledStars(activeIndex)
+				}
+			})
+		}
+
+		// Start trying to find stars
+		tryFindStars()
+	}
+})
+
+/**
+ * Product reviews: Manage star rating fill states
+ *
+ * @since 2.1
+ */
+function bricksWooStarRatingManageFill() {
+	bricksWooStarRatingManageFillFn.run()
 }
 
 /**
@@ -1323,6 +1380,167 @@ function bricksCheckoutCouponForm() {
 	bricksCheckoutCouponFormFn.run()
 }
 
+/**
+ * Update cart via AJAX when coupon is applied on the cart page
+ *
+ * @since 2.0.2
+ */
+const bricksCartCouponFormFn = new BricksFunction({
+	parentNode: document,
+	selector: '.brxe-woocommerce-cart-coupon[data-ajax-update="true"]',
+	eachElement: (form) => {
+		if (typeof jQuery == 'undefined' || typeof wc_cart_params == 'undefined') {
+			return
+		}
+
+		// Get elements inside the cart coupon form
+		const couponInput = form.querySelector('input[name="coupon_code"]')
+		const applyButton = form.querySelector('button[name="apply_coupon"]')
+
+		// If there is no apply button or coupon input, abort
+		if (!applyButton || !couponInput) {
+			return
+		}
+
+		/**
+		 * Helper function: Check if a node is blocked for processing.
+		 *
+		 * @param {JQuery Object} $node
+		 * @return {bool} True if the DOM Element is UI Blocked, false if not.
+		 */
+		const isBlocked = function ($node) {
+			return $node.is('.processing') || $node.parents('.processing').length
+		}
+
+		/**
+		 * Helper function: Block a node visually for processing.
+		 *
+		 * @param {JQuery Object} $node
+		 */
+		const block = function ($node) {
+			if (!isBlocked($node)) {
+				$node.addClass('processing').block({
+					message: null,
+					overlayCSS: {
+						background: '#fff',
+						opacity: 0.6
+					}
+				})
+			}
+		}
+
+		/**
+		 * Unblock a node after processing is complete.
+		 *
+		 * @param {JQuery Object} $node
+		 */
+		var unblock = function ($node) {
+			$node.removeClass('processing').unblock()
+		}
+
+		const updateCart = () => {
+			const $cartForm = jQuery('.woocommerce-cart-form')
+			const $cartTotals = jQuery('div.cart_totals')
+
+			block($cartForm)
+			block($cartTotals)
+
+			const updateCartTotalsHTML = (html) => {
+				$newCartTotals = jQuery(html).find('div.cart_totals')
+
+				// STEP: Update cart totals
+				jQuery(document.body).trigger('updated_cart_totals')
+				$cartTotals.replaceWith($newCartTotals)
+
+				// STEP: unblock the cart totals
+				unblock($cartTotals)
+			}
+
+			const updateCartFormHTML = (html) => {
+				$newCartForm = jQuery(html).find('.woocommerce-cart-form')
+
+				// STEP: Update cart form
+				$cartForm.replaceWith($newCartForm)
+
+				unblock($cartForm)
+			}
+
+			// Make call to actual form post URL.
+			jQuery.ajax({
+				type: $cartForm.attr('method'),
+				url: $cartForm.attr('action'),
+				data: $cartForm.serialize(),
+				dataType: 'html',
+				success: function (response) {
+					updateCartFormHTML(response)
+					updateCartTotalsHTML(response)
+
+					jQuery(document.body).trigger('updated_wc_div')
+				},
+				complete: function () {
+					unblock($cartForm)
+					unblock($cartTotals)
+				}
+			})
+		}
+
+		const applyCoupon = () => {
+			let $form = jQuery(form)
+
+			// STEP: Block the form to prevent multiple submissions
+			if (isBlocked($form)) {
+				return
+			}
+
+			block($form)
+
+			// STEP: Prepare data to send
+			const couponCode = couponInput.value.trim()
+			const data = {
+				security: wc_cart_params.apply_coupon_nonce,
+				coupon_code: couponCode
+			}
+
+			jQuery.ajax({
+				type: 'POST',
+				url: wc_cart_params.wc_ajax_url.toString().replace('%%endpoint%%', 'apply_coupon'),
+				data: data,
+				success: function (code) {
+					// Remove any notices added previously
+					$form.find('.woocommerce-notices-wrapper').remove()
+
+					if (code) {
+						// Add notices
+						bricksShowNotice(code)
+					}
+
+					bricksScrollToNotices()
+
+					jQuery(document.body).trigger('applied_coupon', [couponCode])
+				},
+				complete: function () {
+					// Unblock the form after the request is complete
+					unblock($form)
+					updateCart()
+				},
+
+				dataType: 'html'
+			})
+		}
+
+		// Add event listener for the apply coupon button
+		applyButton.addEventListener('click', function (event) {
+			event.preventDefault()
+
+			applyCoupon()
+		})
+	}
+})
+
+function bricksCartCouponForm() {
+	bricksCartCouponFormFn.run()
+}
+
 const bricksCheckoutLoginToggleFn = new BricksFunction({
 	parentNode: document,
 	selector: '.brxe-woocommerce-checkout-login .login-toggle',
@@ -1642,9 +1860,11 @@ document.addEventListener('DOMContentLoaded', function (event) {
 	bricksWooProductGalleryEnhance()
 	bricksCheckoutCouponToggle()
 	bricksCheckoutCouponForm()
+	bricksCartCouponForm()
 	bricksCheckoutLoginToggle()
 	bricksCheckoutLoginForm()
 	bricksWooVariationSwatches()
+	bricksWooStarRatingManageFill()
 
 	// Small timeout required to allow other plugins (e.g. WooCommerce Composite Products) to generate additional content (@since 1.8)
 	setTimeout(function () {

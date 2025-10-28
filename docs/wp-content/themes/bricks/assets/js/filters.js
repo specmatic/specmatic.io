@@ -1506,8 +1506,10 @@ const bricksCheckboxFilterFn = new BricksFunction({
 			checkboxInput.addEventListener('change', function (e) {
 				// STEP: Handle multiple checkbox
 				const checkboxValue = e.target.value
-				// Get the currentValue
-				const currentValue = [...filterInstance.currentValue] || []
+				// Get the currentValue - ensure we're working with an array
+				const currentValue = Array.isArray(filterInstance.currentValue)
+					? [...filterInstance.currentValue]
+					: []
 				// Get the index of the checkboxValue in currentValue
 				const index = currentValue.indexOf(checkboxValue)
 				let childrenCheckboxes = []

@@ -301,6 +301,7 @@ const bricksMapFn = new BricksFunction({
 
 				// Run all functions for non-AJAX popups (Reinit all BricksFunction)
 				if (!isAjax) {
+					registerInteractionAddresses() // If popup is not AJAX, have to register interaction again as it might be missed out because the content originally in popup div but not inside infobo div. (#86c60abw0;)
 					bricksRunAllFunctions()
 				}
 
@@ -843,8 +844,8 @@ const bricksMapFn = new BricksFunction({
 		// Register addressId and mapId for interaction elements to simplify addressId and mapId retrieval
 		const registerInteractionAddresses = () => {
 			const interactionElements = document.querySelectorAll(
-				'[data-interactions*="openAddress"], [data-interactions*="closeAddress"]'
-			)
+				'[data-interactions*="openAddress"]:not([data-brx-infobox-map-id]), [data-interactions*="closeAddress"]:not([data-brx-infobox-map-id])'
+			) // With brx-infobox-map-id attribute means already registered
 
 			if (interactionElements.length < 1) return
 
